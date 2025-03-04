@@ -6,10 +6,12 @@ require './core/jwt.php'; // JWT handling
 
 header("Content-Type: application/json");
 
-$data = json_decode(file_get_contents("php://input"), true);
+// Read raw JSON input
+$rawInput = file_get_contents("php://input");
+$data = json_decode($rawInput, true);
 
 // Validate input
-if (empty($data['email']) || empty($data['pin'])) {
+if (empty($data['email']) && empty($data['pin'])) {
     echo json_encode(["success" => false, "message" => "Email and PIN are required"]);
     exit();
 }
@@ -18,23 +20,33 @@ $email = $data['email'];
 $pin = $data['pin'];
 
 // Check if user exists
-$stmt = $pdo->prepare("SELECT id, email, role, pin FROM users WHERE email = ?");
-$stmt->execute([$email]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt = $conn->prepare("SELECT id, email, role, pin FROM users WHERE email = ? OR username = ?");
+$stmt->bind_param("ss", $email,$email);
+$stmt->execute();
 
-if ($user && password_verify($pin, $user['pin'])) {
-    $token = generateJWT($user['id'], $user['role']); // Generate JWT token
+// Fetch data correctly for `mysqli`
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+if (isset($user)) {
+    $decodedPassword = base64_decode($user['pin']); // Decode stored password
+    if ($pin === $decodedPassword) {
+        $token = generateJWT($user['id'], $user['role']); // Generate JWT token
 
-    echo json_encode([
-        "success" => true,
-        "token" => $token,
-        "user" => [
-            "id" => $user['id'],
-            "email" => $user['email'],
-            "role" => $user['role']
-        ]
-    ]);
+        echo json_encode([
+            "success" => true,
+            "token" => $token,
+            "user" => [
+                "id" => $user['id'],
+                "email" => $user['email'],
+                "role" => $user['role']
+            ]
+        ]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Wrong Password"]);
+    }
 } else {
-    echo json_encode(["success" => false, "message" => "Invalid credentials"]);
+    echo json_encode(["success" => false, "message" => "No user found"]);
 }
+$stmt->close();
+$conn->close();
 ?>

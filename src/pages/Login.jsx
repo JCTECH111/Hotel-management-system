@@ -15,7 +15,7 @@ export default function Login() {
     setLoading(true);
     try {
       const { data } = await axios.post("http://localhost:8000/signin.php", { email, pin });
-
+       console.log(data)
       if (data.success) {
         localStorage.setItem("token", data.token);
         if (data.role === "guest") navigate("/guest-dashboard");
@@ -24,6 +24,7 @@ export default function Login() {
         else if (data.role === "manager") navigate("/manager-dashboard");
       } else {
         toast.error("Invalid credentials");
+        console.log(data.message)
       }
     } catch (error) {
       console.error("Login failed", error);

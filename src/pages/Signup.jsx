@@ -2,10 +2,13 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
     username: "",
+    role: "guest",
     email: "",
     phone: "",
     password: "",
@@ -37,28 +40,41 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/signup.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-          console.log(response)
-      const data = await response.json();
+      const response = await axios.post(
+        "http://localhost:8000/signup.php",
+        formData, // Axios automatically converts it to JSON
+        { headers: { "Content-Type": "application/json" } }
+      );
+    
+      console.log("Full Response:", response);
+console.log("Response Data:", response.data);
+// console.log("Message:", response.data?.message);
 
-      if (data.success) {
-        toast.success("Signup successful!");
-        navigate("/login"); // Redirect to login page
+    
+      if (response.data?.success) {
+        Swal.fire({
+          title: response.data.message,
+          text: "Success!",
+          icon: "success",
+          confirmButtonColor: "#4CAF50", // Green button
+        });
+    
+        navigate("/login");
       } else {
-        toast.error(data.message || "Signup failed");
+        Swal.fire({
+          title:  response.data.message || "Signup failed",
+          text: "Error!" ,
+          icon: "error",
+          confirmButtonColor: "#d33",
+        });
       }
     } catch (error) {
       toast.error("Something went wrong. Try again!");
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
-    }finally{
-        setLoading(false);
-     }
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+    
   };
 
   return (
@@ -107,6 +123,7 @@ const Signup = () => {
             className="w-full px-4 py-2 border-none rounded-lg focus:outline-none   bg-gray-100"
             required 
           />
+          <input type="text" hidden name="role" value={formData.role} />
           </div>
 
           {/* Password */}

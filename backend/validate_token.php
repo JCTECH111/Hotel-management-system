@@ -1,7 +1,7 @@
 
 <?php
 require './core/cors.php';
-require 'jwt.php';
+require './core/jwt.php';
 
 
 $data = json_decode(file_get_contents("php://input"));
