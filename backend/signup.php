@@ -36,7 +36,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(["success" => false, "message" => "Invalid email format"]);
     exit();
 }
-
+// git commit -m "added smtp", git branch -M main, git push -u origin main
 if (!preg_match("/^[0-9]{10,15}$/", $phone)) {
     echo json_encode(["success" => false, "message" => "Invalid phone number"]);
     exit();

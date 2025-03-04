@@ -16,16 +16,30 @@ export default function Login() {
     try {
       const { data } = await axios.post("http://localhost:8000/signin.php", { email, pin });
        console.log(data)
-      if (data.success) {
+       if (data.success && data.token) {
         localStorage.setItem("token", data.token);
-        if (data.role === "guest") navigate("/guest-dashboard");
-        else if (data.role === "employee") navigate("/employee-dashboard");
-        else if (data.role === "housekeeper") navigate("/housekeeper-dashboard");
-        else if (data.role === "manager") navigate("/manager-dashboard");
-      } else {
+        
+        switch (data.user.role) {
+            case "guest":
+                navigate("/guest-dashboard");
+                break;
+            case "employee":
+                navigate("/employee-dashboard");
+                break;
+            case "housekeeper":
+                navigate("/housekeeper-dashboard");
+                break;
+            case "manager":
+                navigate("/manager-dashboard");
+                break;
+            default:
+                navigate("/dashboard"); // Default route
+        }
+    } else {
         toast.error("Invalid credentials");
-        console.log(data.message)
-      }
+        console.log(data.message || "Login failed.");
+    }
+    
     } catch (error) {
       console.error("Login failed", error);
       toast.error("Login failed", error);

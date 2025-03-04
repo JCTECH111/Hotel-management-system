@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 // import Register from "./pages/Register";
-// import Dashboard from "./pages/Dashboard";
+import Home from "../pages/Dashboard";
 import PrivateRoute from "./PrivateRoute";
 
 export default function AppRoutes() {
@@ -17,10 +17,18 @@ export default function AppRoutes() {
         
         {/* Protected Route */}
         <Route 
-          path="/dashboard" 
+          path="/employee-dashboard" 
           element={
             <PrivateRoute>
-              {/* <Dashboard /> */}
+              <Home />
+            </PrivateRoute>
+          } 
+        />
+        <Route 
+          path="/guest-dashboard" 
+          element={
+            <PrivateRoute>
+              {/* <Home /> */}
             </PrivateRoute>
           } 
         />
