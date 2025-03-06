@@ -24,7 +24,7 @@ export default function Login() {
                 navigate("/guest-dashboard");
                 break;
             case "employee":
-                navigate("/employee-dashboard");
+                navigate("/employee");
                 break;
             case "housekeeper":
                 navigate("/housekeeper-dashboard");
