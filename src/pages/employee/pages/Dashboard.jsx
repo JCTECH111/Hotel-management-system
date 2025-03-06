@@ -31,7 +31,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee"
-                className="flex items-center gap-3 p-2 hover:bg-green-600 hover:text-white rounded cursor-pointer"
+                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <HomeIcon className="w-6 h-6" /> Dashboard
               </Link>
@@ -39,7 +39,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee/rooms"
-                className="flex items-center gap-3 p-2 hover:bg-green-600 hover:text-white rounded cursor-pointer"
+                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <InboxStackIcon className="w-6 h-6" /> Rooms
               </Link>
@@ -47,7 +47,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee/bookings"
-                className="flex items-center gap-3 p-2 hover:bg-green-600 hover:text-white rounded cursor-pointer"
+                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <ClipboardDocumentCheckIcon className="w-6 h-6" /> Bookings
               </Link>
@@ -55,7 +55,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee/guests"
-                className="flex items-center gap-3 p-2 hover:bg-green-600 hover:text-white rounded cursor-pointer"
+                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <UserIcon className="w-6 h-6" /> Guests
               </Link>
@@ -63,7 +63,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee/messages"
-                className="flex items-center gap-3 p-2 hover:bg-green-600 hover:text-white rounded cursor-pointer"
+                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <ChatBubbleBottomCenterIcon className="w-6 h-6" /> Messages
               </Link>
@@ -71,7 +71,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee/settings"
-                className="flex items-center gap-3 p-2 hover:bg-green-600 hover:text-white rounded cursor-pointer"
+                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <CogIcon className="w-6 h-6" /> Settings
               </Link>
@@ -79,7 +79,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/logout"
-                className="flex items-center gap-3 p-2 hover:bg-red-500 hover:text-white rounded cursor-pointer relative top-40"
+                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-red-500 hover:text-white rounded cursor-pointer relative top-40"
               >
                 <ArrowLeftEndOnRectangleIcon className="w-6 h-6" /> Logout
               </Link>
@@ -91,7 +91,7 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="md:col-span-4 col-span-5 h-screen  ">
         {/* Navbar */}
-        <nav className="bg-[#ECF3F3] shadow-md p-4 flex justify-between items-center">
+        <nav className="bg-[#ECF3F3] shadow-md p-4 flex justify-between items-center md:mt-2 md:mr-2 m-2 mt-3 rounded-2xl">
           {/* Left Side */}
           <h1 className="text-xl font-bold text-green-700">Overview</h1>
 

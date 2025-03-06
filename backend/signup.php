@@ -43,8 +43,7 @@ if (!preg_match("/^[0-9]{10,15}$/", $phone)) {
 }
 
 // ✅ **Hash the password securely**
-// ✅ **Convert password to Base64**
-$encodedPassword = base64_encode($password);
+$encodedPassword =password_hash($password, PASSWORD_DEFAULT);
 
 // Validate required fields
 if (!$username || !$email || !$phone || !$password) {

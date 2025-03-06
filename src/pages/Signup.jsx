@@ -31,7 +31,6 @@ const Signup = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
@@ -40,6 +39,7 @@ const Signup = () => {
     }
 
     try {
+      setLoading(true);
       const response = await axios.post(
         "http://localhost:8000/signup.php",
         formData, // Axios automatically converts it to JSON

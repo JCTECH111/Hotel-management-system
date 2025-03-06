@@ -28,8 +28,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 if (isset($user)) {
-    $decodedPassword = base64_decode($user['pin']); // Decode stored password
-    if ($pin === $decodedPassword) {
+    if (password_verify($pin, $user['pin'])) {
         $token = generateJWT($user['id'], $user['role']); // Generate JWT token
 
         echo json_encode([
