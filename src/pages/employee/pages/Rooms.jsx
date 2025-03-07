@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, PlusIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
 const Rooms = () => {
@@ -73,31 +73,28 @@ const Rooms = () => {
         <div className="flex gap-2">
           <button
             onClick={() => setFilter("all")}
-            className={`px-4 py-2 rounded-lg ${
-              filter === "all"
+            className={`px-4 py-2 rounded-lg ${filter === "all"
                 ? "bg-orange-500 text-white"
                 : "bg-gray-100 text-gray-700"
-            }`}
+              }`}
           >
             All rooms ({rooms.length})
           </button>
           <button
             onClick={() => setFilter("available")}
-            className={`px-4 py-2 rounded-lg ${
-              filter === "available"
+            className={`px-4 py-2 rounded-lg ${filter === "available"
                 ? "bg-orange-500 text-white"
                 : "bg-gray-100 text-gray-700"
-            }`}
+              }`}
           >
             Available ({rooms.filter((room) => room.status === "available").length})
           </button>
           <button
             onClick={() => setFilter("booked")}
-            className={`px-4 py-2 rounded-lg ${
-              filter === "booked"
+            className={`px-4 py-2 rounded-lg ${filter === "booked"
                 ? "bg-orange-500 text-white"
                 : "bg-gray-100 text-gray-700"
-            }`}
+              }`}
           >
             Booked ({rooms.filter((room) => room.status === "booked").length})
           </button>
@@ -115,15 +112,21 @@ const Rooms = () => {
             <p className="text-gray-600 mb-2">{room.bedType}</p>
             <p className="text-gray-600 mb-4">{room.floor}</p>
             <p className="text-gray-500 text-sm mb-4">{room.amenities}</p>
-            <div
-              className={`px-3 py-1 rounded-full text-sm w-fit ${
-                room.status === "available"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
-              }`}
-            >
-              {room.status === "available" ? "Available" : "Booked"}
+            <div className="flex justify-between p-2">
+              <div
+                className={`px-3 py-1 rounded-full text-sm w-fit ${room.status === "available"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-red-100 text-red-800"
+                  }`}
+              >
+                {room.status === "available" ? "Available" : "Booked"}
+              </div>
+              <Link to={`/employee/room/${room.id}`}>
+                <EyeIcon className="text-green-800 cursor-pointer w-6 h-6" />
+              </Link>
+
             </div>
+
           </div>
         ))}
       </div>
@@ -131,10 +134,10 @@ const Rooms = () => {
       {/* Add Room Button */}
       <Link to='/employee/add-room'>
         <button className="fixed md:bottom-6 bottom-20 md:right-6 right-3 p-4 bg-orange-500 text-white rounded-full shadow-lg hover:bg-orange-600 transition-colors duration-200">
-        <PlusIcon className="w-6 h-6" />
-      </button>
+          <PlusIcon className="w-6 h-6" />
+        </button>
       </Link>
-      
+
     </div>
   );
 };

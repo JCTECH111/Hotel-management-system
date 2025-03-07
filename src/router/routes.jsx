@@ -9,7 +9,8 @@ import Overview from "../pages/employee/pages/Overview";
 import Rooms from "../pages/employee/pages/Rooms";
 import Bookings from "../pages/employee/pages/Bookings";
 import Messages from "../pages/employee/pages/Messages";
-import RoomEdit from "../pages/employee/pages/AddRoom";
+import AddRoom from "../pages/employee/pages/AddRoom";
+import ViewRoom from "../pages/employee/pages/ViewRoom";
 
 export default function AppRoutes() {
   return (
@@ -27,7 +28,9 @@ export default function AppRoutes() {
           <Route path="rooms" element={<Rooms />} />
           <Route path="booking" element={<Bookings />} />
           <Route path="messages" element={<Messages />} />
-          <Route path="add-room" element={<RoomEdit />} />
+          <Route path="add-room" element={<AddRoom />} />
+          <Route path="room/:id" element={<ViewRoom />} />
+
         </Route>
         <Route 
           path="/guest-dashboard" 

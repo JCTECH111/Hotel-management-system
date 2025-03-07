@@ -1,20 +1,22 @@
 import { useState } from "react";
+import { PlusIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
-const RoomEdit = () => {
-  const [roomDetails, setRoomDetails] = useState({
-    price: 340,
-    reservationStatus: "Not Reserved",
-    roomType: "Deluxe",
-    roomNumber: "002",
-    roomStatus: "Clean",
-    returnStatus: "Ready",
-    foStatus: "Vacant",
-    roomClass: "Main",
-    roomCapacity: "2-4 Guests",
-    bedType: "King Size",
+const AddRoom = () => {
+  const [roomData, setRoomData] = useState({
+    price: "",
+    reservationStatus: "",
+    roomType: "",
+    roomNumber: "",
+    roomStatus: "",
+    returnStatus: "",
+    foStatus: "",
+    roomCapacity: "",
+    bedType: "",
+    amenities: [],
+    images: [],
   });
 
-  const amenities = [
+  const allAmenities = [
     "Shower",
     "Safe Box",
     "Luggage",
@@ -27,56 +29,143 @@ const RoomEdit = () => {
     "Internet",
   ];
 
-  const selectedAmenities = ["Shower", "Sea View", "Refrigerator", "Internet"];
+  // Handle image upload
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    setRoomData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...files],
+    }));
+  };
+
+  // Handle removing an image
+  const removeImage = (index) => {
+    setRoomData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+  };
+
+  // Handle input change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setRoomData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle amenity selection
+  const toggleAmenity = (amenity) => {
+    setRoomData((prev) => ({
+      ...prev,
+      amenities: prev.amenities.includes(amenity)
+        ? prev.amenities.filter((item) => item !== amenity)
+        : [...prev.amenities, amenity],
+    }));
+  };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-5xl mx-auto mb-10">
-      {/* Title */}
-      <h2 className="text-2xl font-semibold mb-6">Room Edit</h2>
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6">Add New Room</h1>
 
-      {/* Room Pictures */}
+      {/* Image Upload Section */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2">Room Picture</h3>
-        <div className="grid grid-cols-4 gap-4">
-          <div className="h-20 bg-gray-200 flex items-center justify-center">📷</div>
-          <div className="h-20 bg-gray-200 flex items-center justify-center">📷</div>
-          <div className="h-20 bg-gray-200 flex items-center justify-center">📷</div>
-          <div className="h-20 bg-gray-100 flex items-center justify-center border-dashed border-2">
-            + Add Image
-          </div>
+        <h2 className="text-lg font-semibold mb-3">Room Pictures</h2>
+        <div className="flex gap-4 flex-wrap">
+          {roomData.images.map((img, index) => (
+            <div key={index} className="relative w-24 h-24 border rounded-md overflow-hidden">
+              <img src={URL.createObjectURL(img)} alt="Room" className="w-full h-full object-cover" />
+              <button
+                onClick={() => removeImage(index)}
+                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+              >
+                <XCircleIcon className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+          <label className="w-24 h-24 flex items-center justify-center border-2 border-dashed cursor-pointer text-gray-500">
+            <input type="file" multiple className="hidden" onChange={handleImageUpload} />
+            <PlusIcon className="w-6 h-6" />
+          </label>
         </div>
       </div>
 
       {/* Room Details */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {Object.keys(roomDetails).map((key) => (
-          <div key={key} className="flex flex-col">
-            <label className="text-sm font-semibold mb-1 capitalize">
-              {key.replace(/([A-Z])/g, " $1")}
-            </label>
-            <select
-              className="border p-2 rounded-md"
-              value={roomDetails[key]}
-              onChange={(e) => setRoomDetails({ ...roomDetails, [key]: e.target.value })}
-            >
-              <option>{roomDetails[key]}</option>
-              {/* Add other options dynamically based on key */}
-            </select>
-          </div>
-        ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label className="block text-sm font-medium">Room Price</label>
+          <input
+            type="number"
+            name="price"
+            value={roomData.price}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Reservation Status</label>
+          <select name="reservationStatus" value={roomData.reservationStatus} onChange={handleChange} className="w-full p-2 border rounded-md">
+            <option value="">Select</option>
+            <option value="Reserved">Reserved</option>
+            <option value="Not Reserved">Not Reserved</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Room Type</label>
+          <select name="roomType" value={roomData.roomType} onChange={handleChange} className="w-full p-2 border rounded-md">
+            <option value="">Select</option>
+            <option value="Deluxe">Deluxe</option>
+            <option value="Suite">Suite</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Room Number</label>
+          <input type="text" name="roomNumber" value={roomData.roomNumber} onChange={handleChange} className="w-full p-2 border rounded-md" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Room Status</label>
+          <select name="roomStatus" value={roomData.roomStatus} onChange={handleChange} className="w-full p-2 border rounded-md">
+            <option value="">Select</option>
+            <option value="Clean">Clean</option>
+            <option value="Dirty">Dirty</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Return Status</label>
+          <select name="returnStatus" value={roomData.returnStatus} onChange={handleChange} className="w-full p-2 border rounded-md">
+            <option value="Ready">Ready</option>
+            <option value="Not Ready">Not Ready</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Room Capacity</label>
+          <input type="text" name="roomCapacity" value={roomData.roomCapacity} onChange={handleChange} className="w-full p-2 border rounded-md" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Bed Type</label>
+          <select name="bedType" value={roomData.bedType} onChange={handleChange} className="w-full p-2 border rounded-md">
+            <option value="King Size">King Size</option>
+            <option value="Queen Size">Queen Size</option>
+          </select>
+        </div>
       </div>
 
-      {/* Room Amenities */}
+      {/* Amenities */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2">Room Amenities</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-          {amenities.map((amenity) => (
+        <h2 className="text-lg font-semibold mb-3">Room Amenities</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+          {allAmenities.map((amenity) => (
             <label key={amenity} className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                className="form-checkbox"
-                checked={selectedAmenities.includes(amenity)}
-                readOnly
+                checked={roomData.amenities.includes(amenity)}
+                onChange={() => toggleAmenity(amenity)}
+                className="h-4 w-4"
               />
               <span>{amenity}</span>
             </label>
@@ -86,11 +175,11 @@ const RoomEdit = () => {
 
       {/* Buttons */}
       <div className="flex justify-between">
-        <button className="bg-gray-300 text-gray-700 px-4 py-2 rounded">Close</button>
-        <button className="bg-green-600 text-white px-6 py-2 rounded">Save Changes</button>
+        <button className="px-4 py-2 bg-gray-300 rounded">Close</button>
+        <button className="px-4 py-2 bg-green-600 text-white rounded">Save Changes</button>
       </div>
     </div>
   );
 };
 
-export default RoomEdit;
+export default AddRoom;
