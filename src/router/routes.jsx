@@ -11,6 +11,7 @@ import Bookings from "../pages/employee/pages/Bookings";
 import Messages from "../pages/employee/pages/Messages";
 import AddRoom from "../pages/employee/pages/AddRoom";
 import ViewRoom from "../pages/employee/pages/ViewRoom";
+import RoomBooking from "../pages/employee/pages/CreateBooking";
 
 export default function AppRoutes() {
   return (
@@ -26,10 +27,12 @@ export default function AppRoutes() {
           <Route index element={<Overview />} />
 
           <Route path="rooms" element={<Rooms />} />
-          <Route path="booking" element={<Bookings />} />
+          <Route path="bookings" element={<Bookings />} />
           <Route path="messages" element={<Messages />} />
           <Route path="add-room" element={<AddRoom />} />
           <Route path="room/:id" element={<ViewRoom />} />
+          {/* <Route path="edit-room/:id" element={<EditRoom />} /> */}
+          <Route path="room-booking" element={<RoomBooking />} />
 
         </Route>
         <Route 

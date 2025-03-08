@@ -7,7 +7,7 @@ const BookingTable = () => {
         <div className="overflow-auto">
           <table className="w-full min-w-[600px] border-collapse ">
             <thead>
-              <tr className="bg-gray-200 text-left">
+              <tr className="bg-gray-200  text-left">
                 <th className="p-3 whitespace-nowrap">Book ID</th>
                 <th className="p-3 whitespace-nowrap">Name</th>
                 <th className="p-3 whitespace-nowrap">Room</th>
@@ -18,7 +18,7 @@ const BookingTable = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-t bg-gray-50 hover:bg-gray-100 transition">
+              <tr className="border-t border-gray-100 bg-gray-50 hover:bg-gray-100 transition">
                 <td className="p-3 whitespace-nowrap">555013</td>
                 <td className="p-3 whitespace-nowrap">Boyd Briggs</td>
                 <td className="p-3 whitespace-nowrap">Deluxe</td>
@@ -27,7 +27,7 @@ const BookingTable = () => {
                 <td className="p-3 whitespace-nowrap">1 Person</td>
                 <td className="p-3 whitespace-nowrap text-blue-500 font-semibold">In house</td>
               </tr>
-              <tr className="border-t bg-gray-50 hover:bg-gray-100 transition">
+              <tr className="border-t border-gray-100 bg-gray-50 hover:bg-gray-100 transition">
                 <td className="p-3 whitespace-nowrap">555013</td>
                 <td className="p-3 whitespace-nowrap">Boyd Briggs</td>
                 <td className="p-3 whitespace-nowrap">Deluxe</td>
@@ -36,7 +36,7 @@ const BookingTable = () => {
                 <td className="p-3 whitespace-nowrap">1 Person</td>
                 <td className="p-3 whitespace-nowrap text-blue-500 font-semibold">In house</td>
               </tr>
-              <tr className="border-t bg-gray-50 hover:bg-gray-100 transition">
+              <tr className="border-t border-gray-100 bg-gray-50 hover:bg-gray-100 transition">
                 <td className="p-3 whitespace-nowrap">555013</td>
                 <td className="p-3 whitespace-nowrap">Boyd Briggs</td>
                 <td className="p-3 whitespace-nowrap">Deluxe</td>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 
 const AddRoom = () => {
   const [roomData, setRoomData] = useState({
@@ -63,7 +64,7 @@ const AddRoom = () => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto">
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto mb-10">
       <h1 className="text-2xl font-bold mb-6">Add New Room</h1>
 
       {/* Image Upload Section */}
@@ -71,7 +72,7 @@ const AddRoom = () => {
         <h2 className="text-lg font-semibold mb-3">Room Pictures</h2>
         <div className="flex gap-4 flex-wrap">
           {roomData.images.map((img, index) => (
-            <div key={index} className="relative w-24 h-24 border rounded-md overflow-hidden">
+            <div key={index} className="relative w-24 h-24 rounded-md overflow-hidden">
               <img src={URL.createObjectURL(img)} alt="Room" className="w-full h-full object-cover" />
               <button
                 onClick={() => removeImage(index)}
@@ -81,7 +82,7 @@ const AddRoom = () => {
               </button>
             </div>
           ))}
-          <label className="w-24 h-24 flex items-center justify-center border-2 border-dashed cursor-pointer text-gray-500">
+          <label className="w-24 h-24 flex items-center justify-center border-[2px] border-dashed border-gray-200  border-gray-200-dashed cursor-pointer text-gray-500">
             <input type="file" multiple className="hidden" onChange={handleImageUpload} />
             <PlusIcon className="w-6 h-6" />
           </label>
@@ -97,13 +98,13 @@ const AddRoom = () => {
             name="price"
             value={roomData.price}
             onChange={handleChange}
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border border-gray-200 rounded-md"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium">Reservation Status</label>
-          <select name="reservationStatus" value={roomData.reservationStatus} onChange={handleChange} className="w-full p-2 border rounded-md">
+          <select name="reservationStatus" value={roomData.reservationStatus} onChange={handleChange} className="w-full p-2 border border-gray-200 rounded-md">
             <option value="">Select</option>
             <option value="Reserved">Reserved</option>
             <option value="Not Reserved">Not Reserved</option>
@@ -112,7 +113,7 @@ const AddRoom = () => {
 
         <div>
           <label className="block text-sm font-medium">Room Type</label>
-          <select name="roomType" value={roomData.roomType} onChange={handleChange} className="w-full p-2 border rounded-md">
+          <select name="roomType" value={roomData.roomType} onChange={handleChange} className="w-full p-2 border border-gray-200 rounded-md">
             <option value="">Select</option>
             <option value="Deluxe">Deluxe</option>
             <option value="Suite">Suite</option>
@@ -121,12 +122,12 @@ const AddRoom = () => {
 
         <div>
           <label className="block text-sm font-medium">Room Number</label>
-          <input type="text" name="roomNumber" value={roomData.roomNumber} onChange={handleChange} className="w-full p-2 border rounded-md" />
+          <input type="text" name="roomNumber" value={roomData.roomNumber} onChange={handleChange} className="w-full p-2 border border-gray-200 rounded-md" />
         </div>
 
         <div>
           <label className="block text-sm font-medium">Room Status</label>
-          <select name="roomStatus" value={roomData.roomStatus} onChange={handleChange} className="w-full p-2 border rounded-md">
+          <select name="roomStatus" value={roomData.roomStatus} onChange={handleChange} className="w-full p-2 border border-gray-200 rounded-md">
             <option value="">Select</option>
             <option value="Clean">Clean</option>
             <option value="Dirty">Dirty</option>
@@ -135,7 +136,7 @@ const AddRoom = () => {
 
         <div>
           <label className="block text-sm font-medium">Return Status</label>
-          <select name="returnStatus" value={roomData.returnStatus} onChange={handleChange} className="w-full p-2 border rounded-md">
+          <select name="returnStatus" value={roomData.returnStatus} onChange={handleChange} className="w-full p-2 border border-gray-200 rounded-md">
             <option value="Ready">Ready</option>
             <option value="Not Ready">Not Ready</option>
           </select>
@@ -143,12 +144,12 @@ const AddRoom = () => {
 
         <div>
           <label className="block text-sm font-medium">Room Capacity</label>
-          <input type="text" name="roomCapacity" value={roomData.roomCapacity} onChange={handleChange} className="w-full p-2 border rounded-md" />
+          <input type="text" name="roomCapacity" value={roomData.roomCapacity} onChange={handleChange} className="w-full p-2 border border-gray-200 rounded-md" />
         </div>
 
         <div>
           <label className="block text-sm font-medium">Bed Type</label>
-          <select name="bedType" value={roomData.bedType} onChange={handleChange} className="w-full p-2 border rounded-md">
+          <select name="bedType" value={roomData.bedType} onChange={handleChange} className="w-full p-2 border border-gray-200 rounded-md">
             <option value="King Size">King Size</option>
             <option value="Queen Size">Queen Size</option>
           </select>
@@ -175,7 +176,9 @@ const AddRoom = () => {
 
       {/* Buttons */}
       <div className="flex justify-between">
-        <button className="px-4 py-2 bg-gray-300 rounded">Close</button>
+        <Link to="/employee/rooms">
+        <button className="px-4 py-2 bg-red-500 rounded">Close</button>
+        </Link>
         <button className="px-4 py-2 bg-green-600 text-white rounded">Save Changes</button>
       </div>
     </div>

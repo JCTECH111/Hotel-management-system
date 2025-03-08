@@ -49,7 +49,7 @@ const Rooms = () => {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-1">
       {/* Header */}
       <h1 className="text-2xl font-bold mb-6">Search for rooms and offers</h1>
 
