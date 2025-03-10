@@ -1,8 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import Home from "./pages/Home";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
-// import Register from "./pages/Register";
 import Home from "../pages/employee/pages/Dashboard";
 import PrivateRoute from "./PrivateRoute";
 import Overview from "../pages/employee/pages/Overview";
@@ -12,42 +10,45 @@ import ChatPage from "../pages/employee/pages/Messages";
 import AddRoom from "../pages/employee/pages/AddRoom";
 import ViewRoom from "../pages/employee/pages/ViewRoom";
 import RoomBooking from "../pages/employee/pages/CreateBooking";
+import GuestPage from "../pages/employee/pages/Guests";
+import Settings from "../pages/employee/pages/Settings";
+import NotFound from "../pages/NotFound"; // Import the 404 page component
 
 export default function AppRoutes() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={<Home />} /> */}
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signUp" element={<Signup />} />
-        {/* <Route path="/register" element={<Register />} /> */}
 
-        {/* Protected Route */}
+        {/* Protected Routes */}
         <Route path="/employee" element={<Home />}>
-  <Route index element={<Overview />} />
+          <Route index element={<Overview />} />
+          <Route path="rooms" element={<Rooms />} />
+          <Route path="bookings" element={<Bookings />} />
+          <Route path="messages" element={<ChatPage />} />
+          <Route path="guests" element={<GuestPage />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="messages/chat/:id" element={<ChatPage />} />
+          <Route path="add-room" element={<AddRoom />} />
+          <Route path="room/:id" element={<ViewRoom />} />
+          <Route path="room-booking" element={<RoomBooking />} />
+        </Route>
 
-  <Route path="rooms" element={<Rooms />} />
-  <Route path="bookings" element={<Bookings />} />
-  <Route path="messages" element={<ChatPage />} />
+        {/* Guest Dashboard (Protected) */}
+        <Route
+          path="/guest-dashboard"
+          element={
+            <PrivateRoute>
+              {/* <Home /> */}
+            </PrivateRoute>
+          }
+        />
 
-  {/* Child route should be at the same level as messages */}
-  <Route path="messages/chat/:id" element={<ChatPage />} />
-
-  <Route path="add-room" element={<AddRoom />} />
-  <Route path="room/:id" element={<ViewRoom />} />
-  {/* <Route path="edit-room/:id" element={<EditRoom />} /> */}
-  <Route path="room-booking" element={<RoomBooking />} />
-</Route>
-
-      <Route
-        path="/guest-dashboard"
-        element={
-          <PrivateRoute>
-            {/* <Home /> */}
-          </PrivateRoute>
-        }
-      />
-    </Routes>
-    </Router >
+        {/* 404 Page */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
 }
