@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AuthContext } from "../context/AuthContext";
 import "react-toastify/dist/ReactToastify.css";
 
 
 export default function Login() {
+  const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [pin, setPin] = useState("");
  const [loading, setLoading] = useState(false);
@@ -17,7 +19,7 @@ export default function Login() {
       const { data } = await axios.post("http://localhost:8000/signin.php", { email, pin });
        console.log(data)
        if (data.success && data.token) {
-        localStorage.setItem("token", data.token);
+        login(data.token, data.user);
         
         switch (data.user.role) {
             case "guest":
