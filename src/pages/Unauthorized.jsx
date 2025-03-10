@@ -9,7 +9,7 @@ const Unauthorized = () => {
       <LockClosedIcon className="w-20 h-20 text-red-500 mb-6" />
 
       {/* Title */}
-      <h1 className="text-4xl font-bold text-gray-800 mb-4">403 - Unauthorized Access</h1>
+      <h1 className="text-2xl md:text-4xl font-bold text-gray-800 mb-4">403 - Unauthorized Access</h1>
 
       {/* Message */}
       <p className="text-lg text-gray-600 text-center mb-6">

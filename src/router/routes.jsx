@@ -27,24 +27,24 @@ export default function AppRoutes() {
 
         {/* Protected Routes */}
         <Route
-          path="/employee"
-          element={
-            <PrivateRoute allowedRoles={["employee"]}>
-              <Home />
-            </PrivateRoute>
-          }
-        >
-          <Route index element={<Overview />} />
-          <Route path="rooms" element={<Rooms />} />
-          <Route path="bookings" element={<Bookings />} />
-          <Route path="messages" element={<ChatPage />} />
-          <Route path="guests" element={<GuestPage />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="messages/chat/:id" element={<ChatPage />} />
-          <Route path="add-room" element={<AddRoom />} />
-          <Route path="room/:id" element={<ViewRoom />} />
-          <Route path="room-booking" element={<RoomBooking />} />
-        </Route>
+  path="/employee"
+  element={
+    <PrivateRoute allowedRoles={["employee"]}>
+      <Home />
+    </PrivateRoute>
+  }
+>
+  <Route index element={<Overview />} />
+  <Route path="rooms" element={<Rooms />} />
+  <Route path="bookings" element={<Bookings />} />
+  <Route path="messages" element={<ChatPage />} />
+  <Route path="guests" element={<GuestPage />} />
+  <Route path="settings" element={<Settings />} />
+  <Route path="messages/chat/:id" element={<ChatPage />} />
+  <Route path="add-room" element={<AddRoom />} />
+  <Route path="room/:id" element={<ViewRoom />} />
+  <Route path="room-booking" element={<RoomBooking />} />
+</Route>
 
         {/* Guest Dashboard (Protected) */}
         <Route
