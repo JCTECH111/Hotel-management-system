@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom"; // Replace useHistory with useNavigate
 import {
   PaperAirplaneIcon,
   EllipsisVerticalIcon,
@@ -34,9 +34,10 @@ const messages = {
 
 export default function ChatPage() {
   const { id } = useParams();
+  const navigate = useNavigate(); // Replace useHistory with useNavigate
   const chatMessages = messages[id] || [];
   const [newMessage, setNewMessage] = useState("");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(!id);
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -44,6 +45,11 @@ export default function ChatPage() {
       messages[id].push({ user: "You", text: newMessage, time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) });
       setNewMessage("");
     }
+  };
+
+  const handleChatClick = (chatId) => {
+    navigate(`/employee/messages/chat/${chatId}`); // Use navigate instead of history.push
+    setIsSidebarOpen(false);
   };
 
   return (
@@ -54,7 +60,7 @@ export default function ChatPage() {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold">Messages</h2>
           <button onClick={() => setIsSidebarOpen(false)} className="md:hidden">
-            <ChevronLeftIcon className="w-6 h-6 text-gray-600" />
+            <ChevronLeftIcon className="w-7 h-7 text-green-600" />
           </button>
         </div>
 
@@ -69,10 +75,10 @@ export default function ChatPage() {
         {/* Pinned Messages */}
         <div className="mb-6 p-1 bg-gray-50 rounded-lg w-full">
           {users.map((user) => (
-            <Link
+            <div
               key={user.id}
-              to={`/employee/messages/chat/${user.id}`}
-              className="flex items-center p-1 mb-6 bg-white rounded-lg shadow-sm hover:bg-gray-100 whitespace-nowrap"
+              onClick={() => handleChatClick(user.id)}
+              className="flex items-center p-1 mb-6 bg-white rounded-lg shadow-sm hover:bg-gray-100 whitespace-nowrap cursor-pointer"
             >
               <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full mr-3" />
               <div>
@@ -80,17 +86,17 @@ export default function ChatPage() {
                 <p className="text-sm text-gray-500">{user.lastMessage}</p>
               </div>
               <span className="ml-auto text-xs text-gray-400">{user.time}</span>
-            </Link>
+            </div>
           ))}
         </div>
       </div>
 
       {/* Chat Window */}
-      <div className="relative flex-1 flex flex-col bg-white shadow-lg">
+      <div className={`relative flex-1 flex flex-col bg-white shadow-lg ${!id && "hidden"} md:block`}>
         {/* Chat Header */}
         <div className="p-2 bg-white flex items-center">
           <button onClick={() => setIsSidebarOpen(true)} className="md:hidden mr-3">
-            <ChevronLeftIcon className="w-6 h-6 text-gray-600" />
+            <ChevronLeftIcon className="w-7 h-7 text-green-600" />
           </button>
           {id && (
             <>
@@ -121,10 +127,10 @@ export default function ChatPage() {
 
         {/* Message Input */}
         <MessageInput
-        newMessage={newMessage}
-        setNewMessage={setNewMessage}
-        handleSendMessage={handleSendMessage}
-      />
+          newMessage={newMessage}
+          setNewMessage={setNewMessage}
+          handleSendMessage={handleSendMessage}
+        />
       </div>
     </div>
   );

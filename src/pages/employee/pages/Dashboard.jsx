@@ -31,6 +31,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee"
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <HomeIcon className="w-6 h-6" /> Dashboard
@@ -39,6 +40,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee/rooms"
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <InboxStackIcon className="w-6 h-6" /> Rooms
@@ -47,6 +49,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee/bookings"
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <ClipboardDocumentCheckIcon className="w-6 h-6" /> Bookings
@@ -55,6 +58,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee/guests"
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <UserIcon className="w-6 h-6" /> Guests
@@ -63,6 +67,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee/messages"
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <ChatBubbleBottomCenterIcon className="w-6 h-6" /> Messages
@@ -71,6 +76,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/employee/settings"
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <CogIcon className="w-6 h-6" /> Settings
@@ -79,6 +85,7 @@ const Dashboard = () => {
             <li>
               <Link
                 to="/logout"
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-red-500 hover:text-white rounded cursor-pointer relative top-40"
               >
                 <ArrowLeftEndOnRectangleIcon className="w-6 h-6" /> Logout
