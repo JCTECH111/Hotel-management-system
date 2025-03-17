@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-
+import GetFacilities from "../../../hook/GetFacilities";
 const AddRoom = () => {
+  const { facilities: GottenFacilities, loading, error } = GetFacilities(); 
+  const [allAmenities, setAllAmenities] = useState([])
   const [roomData, setRoomData] = useState({
     price: "",
     reservationStatus: "",
@@ -16,19 +18,12 @@ const AddRoom = () => {
     amenities: [],
     images: [],
   });
-
-  const allAmenities = [
-    "Shower",
-    "Safe Box",
-    "Luggage",
-    "Concierge",
-    "Morning Sunlight",
-    "Sea View",
-    "Refrigerator",
-    "Air Conditioner",
-    "TV Cable",
-    "Internet",
-  ];
+  // Update allAmenities when GottenFacilities changes
+  useEffect(() => {
+    if (GottenFacilities.length > 0) {
+      setAllAmenities(GottenFacilities.map((facility) => facility.name));
+    }
+  }, [GottenFacilities]);
 
   // Handle image upload
   const handleImageUpload = (e) => {
