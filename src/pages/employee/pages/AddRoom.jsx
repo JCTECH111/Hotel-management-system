@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { PlusIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import GetFacilities from "../../../hook/GetFacilities";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 const AddRoom = () => {
-  const { facilities: GottenFacilities, loading, error } = GetFacilities();
+  const { facilities: GottenFacilities, loading: facilitiesLoading, error: facilitiesError } = GetFacilities();
   const [allAmenities, setAllAmenities] = useState([])
   const [roomData, setRoomData] = useState({
     price: "",
@@ -17,6 +20,8 @@ const AddRoom = () => {
     amenities: [],
     images: [],
   });
+  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state for form submission
+  const [submitError, setSubmitError] = useState(null); // Error state for form submission
   // Update allAmenities when GottenFacilities changes
   useEffect(() => {
     if (GottenFacilities.length > 0) {
@@ -27,6 +32,10 @@ const AddRoom = () => {
   // Handle image upload
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
+    if (files.length + roomData.images.length > 5) {
+      toast.error("You can upload a maximum of 5 images.");
+      return;
+    }
     setRoomData((prev) => ({
       ...prev,
       images: [...prev.images, ...files],
@@ -56,6 +65,80 @@ const AddRoom = () => {
         : [...prev.amenities, amenity],
     }));
   };
+
+  // Handle save changes
+  const handleSave = async () => {
+    if (!roomData.roomNumber || !roomData.roomType || !roomData.price) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    setIsSubmitting(true); // Start loading
+    setSubmitError(null); // Reset error state
+
+    try {
+      // Prepare form data for file uploads
+      const formData = new FormData();
+      formData.append("price", roomData.price);
+      formData.append("reservationStatus", roomData.reservationStatus);
+      formData.append("roomType", roomData.roomType);
+      formData.append("roomNumber", roomData.roomNumber);
+      formData.append("roomStatus", roomData.roomStatus);
+      formData.append("foStatus", roomData.foStatus);
+      formData.append("roomCapacity", roomData.roomCapacity);
+      formData.append("bedType", roomData.bedType);
+      formData.append("amenities", JSON.stringify(roomData.amenities)); // Convert array to JSON string
+    
+       // Append each image file
+    roomData.images.forEach((image, index) => {
+      if (image instanceof File) {
+        formData.append("images[]", image); // Append each image file
+      } else {
+        console.error(`Invalid file at index ${index}:`, image);
+      }
+    });
+
+
+     // Log FormData contents
+// for (let [key, value] of formData.entries()) {
+//   console.log(key, value);
+// }
+   
+
+      // Send POST request to backend
+      const response = await axios.post("http://localhost:8000/addRoom.php", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Required for file uploads
+        },
+      });
+        console.log(response)
+      // Handle success
+      if (response.status === 201) {
+        toast.error("Room added successfully!");
+        // Reset form (optional)
+        setRoomData({
+          price: "",
+          reservationStatus: "",
+          roomType: "",
+          roomNumber: "",
+          roomStatus: "",
+          foStatus: "",
+          roomCapacity: "",
+          bedType: "",
+          amenities: [],
+          images: [],
+        });
+      }
+    } catch (error) {
+      // Handle error
+      setSubmitError("Failed to save room. Please try again.");
+      toast.error("Failed to save room. Please try again.")
+      console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false); // Stop loading
+    }
+  };
+
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto mb-10">
@@ -191,30 +274,53 @@ const AddRoom = () => {
       </div>
 
       {/* Amenities */}
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold mb-3">Room Amenities</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-          {allAmenities.map((amenity) => (
-            <label key={amenity.name} className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={roomData.amenities.includes(amenity.id)}
-                onChange={() => toggleAmenity(amenity.id)}
-                className="h-4 w-4"
-              />
-              <span>{amenity.name}</span>
-            </label>
-          ))}
-        </div>
-      </div>
+      {
+        facilitiesLoading ? ( // If facilities are loading
+          <div className="flex items-center justify-center p-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            <span className="ml-3 text-gray-700">Loading amenities...</span>
+          </div>
+        ) : facilitiesError ? ( // If there's an error
+          <div className="flex items-center justify-center p-4 bg-red-50 border border-red-200 rounded-lg">
+            <span className="text-red-600">Error: {facilitiesError}</span>
+          </div>
+        ) : ( // If data is loaded successfully
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-3">Room Amenities</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {allAmenities.map((amenity) => (
+                <label key={amenity.name} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={roomData.amenities.includes(amenity.id)}
+                    onChange={() => toggleAmenity(amenity.id)}
+                    className="h-4 w-4"
+                  />
+                  <span>{amenity.name}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
 
       {/* Buttons */}
       <div className="flex justify-between">
         <Link to="/employee/rooms">
           <button className="px-4 py-2 bg-red-500 rounded">Close</button>
         </Link>
-        <button className="px-4 py-2 bg-green-600 text-white rounded" onClick={() => console.log(roomData)}>Save Changes</button>
+        <button
+          className="px-4 py-2 bg-green-600 text-white rounded disabled:bg-green-300"
+          onClick={handleSave}
+          disabled={isSubmitting} // Disable button while submitting
+        >
+          {isSubmitting ? "Saving..." : "Save Changes"}
+        </button>
       </div>
+
+      {/* Display submission error */}
+      {submitError && <p className="text-red-500 mt-4">{submitError}</p>}
     </div>
   );
 };
