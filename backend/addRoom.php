@@ -63,9 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
                 $image_name = $_FILES['images']['name'][$key];
                 $upload_path = __DIR__ . "/Pictures/" . basename($image_name); // Use absolute path
+                $url_path ="http://localhost:8000/Pictures/" . basename($image_name); // Use absolute path
                 if (move_uploaded_file($tmp_name, $upload_path)) {
                     $images[] = $upload_path;
-                    $imageUrl = $upload_path;
+                    $imageUrl = $url_path;
                     if (!$stmt->execute()) {
                         echo "Error adding image: " . $stmt->error;
                     }
