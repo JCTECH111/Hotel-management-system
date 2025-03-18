@@ -1,39 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MagnifyingGlassIcon, PlusIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import GetRooms from "../../../hook/GetRooms";
 
 const Rooms = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [rooms, setRooms] = useState([]);
   const [filter, setFilter] = useState("all"); // 'all', 'available', 'booked'
+  const { roomsValue: GottenRooms, loading: roomsLoading, error: roomsError } = GetRooms();
+
+
+  useEffect(() => {
+    if (GottenRooms.length > 0) {
+      setRooms(GottenRooms);
+      console.log(GottenRooms)
+    }
+  }, [GottenRooms]);
 
   // Sample room data
-  const rooms = [
-    {
-      id: 1,
-      roomNumber: "#001",
-      bedType: "Double bed",
-      floor: "Floor - 1",
-      amenities: "AC, shower, Double bed, towel, bathtub, TV",
-      status: "available",
-    },
-    {
-      id: 2,
-      roomNumber: "#002",
-      bedType: "Single bed",
-      floor: "Floor - 2",
-      amenities: "AC, shower, Single bed, towel, bathtub, TV",
-      status: "booked",
-    },
-    {
-      id: 3,
-      roomNumber: "#003",
-      bedType: "VIP",
-      floor: "Floor - 1",
-      amenities: "AC, shower, VIP bed, towel, bathtub, TV",
-      status: "available",
-    },
-    // Add more rooms as needed
-  ];
+  // const rooms = [
+  //   {
+  //     id: 1,
+  //     roomNumber: "#001",
+  //     bedType: "Double bed",
+  //     floor: "Floor - 1",
+  //     amenities: "AC, shower, Double bed, towel, bathtub, TV",
+  //     status: "available",
+  //   },
+  //   {
+  //     id: 2,
+  //     roomNumber: "#002",
+  //     bedType: "Single bed",
+  //     floor: "Floor - 2",
+  //     amenities: "AC, shower, Single bed, towel, bathtub, TV",
+  //     status: "booked",
+  //   },
+  //   {
+  //     id: 3,
+  //     roomNumber: "#003",
+  //     bedType: "VIP",
+  //     floor: "Floor - 1",
+  //     amenities: "AC, shower, VIP bed, towel, bathtub, TV",
+  //     status: "available",
+  //   },
+  //   // Add more rooms as needed
+  // ];
 
   // Filter rooms based on status
   const filteredRooms = rooms.filter((room) => {
@@ -70,33 +81,48 @@ const Rooms = () => {
         </form>
 
         {/* Filters */}
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
           <button
             onClick={() => setFilter("all")}
-            className={`px-4 py-2 rounded-lg ${filter === "all"
-                ? "bg-orange-500 text-white"
-                : "bg-gray-100 text-gray-700"
+            className={`px-4 py-2 rounded-lg text-sm sm:text-base ${filter === "all" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700"
               }`}
           >
             All rooms ({rooms.length})
           </button>
           <button
-            onClick={() => setFilter("available")}
-            className={`px-4 py-2 rounded-lg ${filter === "available"
-                ? "bg-orange-500 text-white"
-                : "bg-gray-100 text-gray-700"
+            onClick={() => setFilter("Available")}
+            className={`px-4 py-2 rounded-lg text-sm sm:text-base ${filter === "Available" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700"
               }`}
           >
-            Available ({rooms.filter((room) => room.status === "available").length})
+            Available ({rooms.filter((room) => room.status === "Available").length})
           </button>
           <button
-            onClick={() => setFilter("booked")}
-            className={`px-4 py-2 rounded-lg ${filter === "booked"
-                ? "bg-orange-500 text-white"
-                : "bg-gray-100 text-gray-700"
+            onClick={() => setFilter("Occupied")}
+            className={`px-4 py-2 rounded-lg text-sm sm:text-base ${filter === "Occupied" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700"
               }`}
           >
-            Booked ({rooms.filter((room) => room.status === "booked").length})
+            Occupied ({rooms.filter((room) => room.status === "Occupied").length})
+          </button>
+          <button
+            onClick={() => setFilter("Reserved")}
+            className={`px-4 py-2 rounded-lg text-sm sm:text-base ${filter === "Reserved" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700"
+              }`}
+          >
+            Reserved ({rooms.filter((room) => room.status === "Reserved").length})
+          </button>
+          <button
+            onClick={() => setFilter("Cleaning")}
+            className={`px-4 py-2 rounded-lg text-sm sm:text-base ${filter === "Cleaning" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700"
+              }`}
+          >
+            Cleaning ({rooms.filter((room) => room.status === "Cleaning").length})
+          </button>
+          <button
+            onClick={() => setFilter("Maintenance")}
+            className={`px-4 py-2 rounded-lg text-sm sm:text-base ${filter === "Maintenance" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700"
+              }`}
+          >
+            Maintenance ({rooms.filter((room) => room.status === "Maintenance").length})
           </button>
         </div>
       </div>
@@ -108,15 +134,17 @@ const Rooms = () => {
             key={room.id}
             className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
           >
-            <h2 className="text-xl font-semibold mb-2">{room.roomNumber}</h2>
-            <p className="text-gray-600 mb-2">{room.bedType}</p>
-            <p className="text-gray-600 mb-4">{room.floor}</p>
-            <p className="text-gray-500 text-sm mb-4">{room.amenities}</p>
+            <h2 className="text-xl font-semibold mb-2">{room.room_number}</h2>
+            <p className="text-gray-600 mb-2">{room.bed_type}</p>
+            <p className="text-gray-600 mb-4">Floor {"-"} {room.floor}</p>
+            <p className="text-gray-500 text-sm mb-4 truncate">
+              {room.facility_names.join(" ")}
+            </p>
             <div className="flex justify-between p-2">
               <div
                 className={`px-3 py-1 rounded-full text-sm w-fit ${room.status === "available"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
                   }`}
               >
                 {room.status === "available" ? "Available" : "Booked"}
