@@ -1,5 +1,5 @@
 <?php
-
+require './database/config.php'; // Database connection (PDO)
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
@@ -16,15 +16,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "</pre>";
 
     // Get form data
-    $price = $_POST['price'];
-    $reservationStatus = $_POST['reservationStatus'];
-    $roomType = $_POST['roomType'];
-    $roomNumber = $_POST['roomNumber'];
-    $roomStatus = $_POST['roomStatus'];
-    $foStatus = $_POST['foStatus'];
-    $roomCapacity = $_POST['roomCapacity'];
-    $bedType = $_POST['bedType'];
-    $amenities = json_decode($_POST['amenities']); // Decode JSON string
+     // Sanitize and validate form data
+     $price = filter_var($_POST['price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+     $reservationStatus = htmlspecialchars($_POST['reservationStatus'], ENT_QUOTES, 'UTF-8');
+     $roomType = htmlspecialchars($_POST['roomType'], ENT_QUOTES, 'UTF-8');
+     $roomNumber = htmlspecialchars($_POST['roomNumber'], ENT_QUOTES, 'UTF-8');
+     $roomStatus = htmlspecialchars($_POST['roomStatus'], ENT_QUOTES, 'UTF-8');
+     $foStatus = htmlspecialchars($_POST['foStatus'], ENT_QUOTES, 'UTF-8');
+     $roomCapacity = filter_var($_POST['roomCapacity'], FILTER_SANITIZE_NUMBER_INT);
+     $bedType = htmlspecialchars($_POST['bedType'], ENT_QUOTES, 'UTF-8');
+ 
+     // Sanitize and decode JSON string
+     $amenities = json_decode($_POST['amenities']);
+     if (json_last_error() !== JSON_ERROR_NONE) {
+         http_response_code(400);
+         echo json_encode(["message" => "Invalid JSON data for amenities."]);
+         exit;
+     }
+ 
+     // Sanitize each amenity in the array
+     $sanitizedAmenities = array_map(function ($amenity) {
+         return filter_var($amenity, FILTER_SANITIZE_NUMBER_INT); // Assuming amenities are IDs (integers)
+     }, $amenities);
 
     // // Handle file uploads
     $images = [];
