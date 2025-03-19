@@ -13,6 +13,7 @@ import RoomBooking from "../pages/employee/pages/CreateBooking";
 import GuestPage from "../pages/employee/pages/Guests";
 import Settings from "../pages/employee/pages/Settings";
 import NotFound from "../pages/NotFound";
+import EditRoom from "../pages/employee/pages/EditRoom";
 // import ManagerDashboard from "../pages/manager/pages/Dashboard"; // Add manager dashboard
 // import HousekeeperDashboard from "../pages/housekeeper/pages/Dashboard"; // Add housekeeper dashboard
 import Unauthorized from "../pages/Unauthorized"; // Add unauthorized page
@@ -43,6 +44,7 @@ export default function AppRoutes() {
   <Route path="messages/chat/:id" element={<ChatPage />} />
   <Route path="add-room" element={<AddRoom />} />
   <Route path="room/:id" element={<ViewRoom />} />
+  <Route path="edit-room/:id" element={<EditRoom />} />
   <Route path="room-booking" element={<RoomBooking />} />
 </Route>
 
