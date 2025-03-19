@@ -61,24 +61,26 @@ const RoomBooking = () => {
       payment_method: guestInfo.paymentMethod,
     };
 
-    try {
-      const response = await fetch("/api/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(booking),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to book room.");
+    fetch('http://localhost:8000/add_booking.php', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(booking),
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.booking_id) {
+          alert('Booking successful! Booking ID: ' + data.booking_id);
+          // Redirect or show confirmation
+      } else {
+          alert('Error: ' + data.error);
       }
-
-      window.location.href = `/booking-confirmation/${booking.id}`;
-    } catch (error) {
-      console.error("Error booking room:", error);
-      alert("An error occurred. Please try again.");
-    }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred. Please try again.');
+  });
   };
 
   // const rooms = [
@@ -110,7 +112,7 @@ const RoomBooking = () => {
 
   const filteredRooms = rooms.filter((room) => {
     if (roomType === "all") return room.capacity >= guests;
-    return room.capacity >= guests && room.name.toLowerCase().includes(roomType);
+    return room.capacity >= guests && room.type.includes(roomType);
   });
 
   const handleSearch = (e) => {
@@ -169,9 +171,14 @@ const RoomBooking = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">All</option>
-              <option value="deluxe">Deluxe</option>
-              <option value="suite">Suite</option>
-              <option value="single">Single</option>
+              <option value="Suite">Suite</option>
+            <option value="Standard">Standard</option>
+            <option value="Superior">Superior</option>
+            <option value="Deluxe">Deluxe</option>
+            <option value="Suite">Suite</option>
+            <option value="Villa">Villa</option>
+            <option value="Ocean View">Ocean View</option>
+            <option value="Pool View">Pool View</option>
             </select>
           </div>
         </div>
@@ -215,7 +222,7 @@ const RoomBooking = () => {
           <div className="bg-white p-6 rounded-lg z-40 shadow-md w-full max-w-md">
             <h2 className="text-xl font-semibold mb-4">Confirm Booking</h2>
             <p className="text-gray-600 mb-4">
-              You are booking the <strong>{selectedRoom.name}</strong> for{" "}
+              You are booking the <strong>{selectedRoom.type}</strong> for{" "}
               <strong>${selectedRoom.price} / night</strong>.
             </p>
             <form onSubmit={handleBookingSubmit}>
