@@ -37,6 +37,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Fetch old image URLs from the database
+    $stmt = $conn->prepare("SELECT image_url FROM room_images WHERE room_id = ?");
+    $stmt->bind_param("i", $roomId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $oldImageUrls = [];
+    while ($row = $result->fetch_assoc()) {
+        $oldImageUrls[] = $row['image_url'];
+    }
+
+    // Delete old images from the server
+    foreach ($oldImageUrls as $oldImageUrl) {
+        $filePath = __DIR__ . "/Pictures/" . basename($oldImageUrl);
+        if (file_exists($filePath)) {
+            unlink($filePath); // Delete the file
+        }
+    }
+
+    // Delete old image URLs from the database
+    $stmt = $conn->prepare("DELETE FROM room_images WHERE room_id = ?");
+    $stmt->bind_param("i", $roomId);
+    if (!$stmt->execute()) {
+        http_response_code(500);
+        echo json_encode(["message" => "Failed to delete old images from the database."]);
+        exit;
+    }
+
     // Sanitize and validate form data
     $price = isset($_POST['price']) ? filter_var($_POST['price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : $room['price'];
     $roomStatus = isset($_POST['roomStatus']) ? htmlspecialchars($_POST['roomStatus'], ENT_QUOTES, 'UTF-8') : $room['status'];
@@ -69,24 +96,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Delete all existing images for the room
-    $stmt = $conn->prepare("DELETE FROM room_images WHERE room_id = ?");
-    $stmt->bind_param("i", $roomId);
-    if (!$stmt->execute()) {
-        http_response_code(500);
-        echo json_encode(["message" => "Failed to delete existing images."]);
-        exit;
-    }
-
     // Insert new images
     if (!empty($_FILES['images'])) {
         $stmt = $conn->prepare("INSERT INTO room_images (room_id, image_url) VALUES (?, ?)");
         $stmt->bind_param("is", $roomId, $imageUrl);
 
         foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
-            $image_name = $_FILES['images']['name'][$key];
-            $upload_path = __DIR__ . "/Pictures/" . basename($image_name); // Use absolute path
-            $url_path = "http://localhost:8000/Pictures/" . basename($image_name); // Use absolute path
+            $image_name = uniqid() . "_" . basename($_FILES['images']['name'][$key]); // Generate unique file name
+            $upload_path = __DIR__ . "/Pictures/" . $image_name; // Use absolute path
+            $url_path = "http://localhost:8000/Pictures/" . $image_name; // Use absolute path
 
             if (move_uploaded_file($tmp_name, $upload_path)) {
                 $imageUrl = $url_path;
