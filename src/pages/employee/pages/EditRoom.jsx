@@ -129,17 +129,17 @@ const EditRoom = () => {
       });
 
       // Send PUT request to backend to update the room
-      const response = await axios.put(`http://localhost:8000/editRoom.php?roomId=${id}`, formData, {
+      const response = await axios.post(`http://localhost:8000/editRoom.php?roomId=${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       console.log(response)
 
-    //   if (response.status === 200) {
-    //     toast.success("Room updated successfully!");
-    //     navigate("/employee/rooms");
-    //   }
+      if (response.status === 200) {
+        toast.success("Room updated successfully!");
+        navigate("/employee/rooms");
+      }
     } catch (error) {
       setSubmitError("Failed to update room. Please try again.");
       toast.error("Failed to update room. Please try again.");

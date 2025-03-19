@@ -4,7 +4,7 @@ require './database/config.php'; // Database connection (PDO)
 // Handle CORS and preflight requests
 header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: PUT, OPTIONS");
+header("Access-Control-Allow-Methods: POST, OPTIONS, GET");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
@@ -14,8 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    // Get roomId from the URL query parameters
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get roomId from the request body or query parameters
     $roomId = isset($_GET['roomId']) ? filter_var($_GET['roomId'], FILTER_SANITIZE_NUMBER_INT) : null;
 
     if (!$roomId) {
@@ -23,9 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         echo json_encode(["message" => "Invalid room ID."]);
         exit;
     }
-
-    // Parse the request body
-    parse_str(file_get_contents("php://input"), $_PUT);
 
     // Fetch existing room data
     $stmt = $conn->prepare("SELECT * FROM rooms WHERE id = ?");
@@ -41,22 +38,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     }
 
     // Sanitize and validate form data
-    $price = isset($_PUT['price']) ? filter_var($_PUT['price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : $room['price'];
-    $roomStatus = isset($_PUT['roomStatus']) ? htmlspecialchars($_PUT['roomStatus'], ENT_QUOTES, 'UTF-8') : $room['status'];
-    $roomType = isset($_PUT['roomType']) ? htmlspecialchars($_PUT['roomType'], ENT_QUOTES, 'UTF-8') : $room['type'];
-    $roomNumber = isset($_PUT['roomNumber']) ? htmlspecialchars($_PUT['roomNumber'], ENT_QUOTES, 'UTF-8') : $room['room_number'];
-    $floor = isset($_PUT['floor']) ? filter_var($_PUT['floor'], FILTER_SANITIZE_NUMBER_INT) : $room['floor'];
-    $roomCapacity = isset($_PUT['roomCapacity']) ? filter_var($_PUT['roomCapacity'], FILTER_SANITIZE_NUMBER_INT) : $room['capacity'];
-    $bedType = isset($_PUT['bedType']) ? htmlspecialchars($_PUT['bedType'], ENT_QUOTES, 'UTF-8') : $room['bed_type'];
- 
+    $price = isset($_POST['price']) ? filter_var($_POST['price'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION) : $room['price'];
+    $roomStatus = isset($_POST['roomStatus']) ? htmlspecialchars($_POST['roomStatus'], ENT_QUOTES, 'UTF-8') : $room['status'];
+    $roomType = isset($_POST['roomType']) ? htmlspecialchars($_POST['roomType'], ENT_QUOTES, 'UTF-8') : $room['type'];
+    $roomNumber = isset($_POST['roomNumber']) ? htmlspecialchars($_POST['roomNumber'], ENT_QUOTES, 'UTF-8') : $room['room_number'];
+    $floor = isset($_POST['floor']) ? filter_var($_POST['floor'], FILTER_SANITIZE_NUMBER_INT) : $room['floor'];
+    $roomCapacity = isset($_POST['roomCapacity']) ? filter_var($_POST['roomCapacity'], FILTER_SANITIZE_NUMBER_INT) : $room['capacity'];
+    $bedType = isset($_POST['bedType']) ? htmlspecialchars($_POST['bedType'], ENT_QUOTES, 'UTF-8') : $room['bed_type'];
+
     // Sanitize and decode JSON string for amenities
-    $amenities = isset($_PUT['amenities']) ? json_decode($_PUT['amenities']) : [];
+    $amenities = isset($_POST['amenities']) ? json_decode($_POST['amenities']) : [];
     if (json_last_error() !== JSON_ERROR_NONE) {
         http_response_code(400);
         echo json_encode(["message" => "Invalid JSON data for amenities."]);
         exit;
     }
-  print_r($amenities);
+
     // Sanitize each amenity in the array
     $sanitizedAmenities = array_map(function ($amenity) {
         return filter_var($amenity, FILTER_SANITIZE_NUMBER_INT); // Assuming amenities are IDs (integers)
@@ -132,10 +129,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     // Return success response
     http_response_code(200);
     echo json_encode(["message" => "Room updated successfully."]);
-// } else {
-//     http_response_code(405);
-//     echo json_encode(["message" => "Method Not Allowed"]);
-// }
+} else {
+    http_response_code(405);
+    echo json_encode(["message" => "Method Not Allowed"]);
+}
 
 // Close the connection
 $conn->close();
