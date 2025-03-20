@@ -20,10 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
 
     // Validate and sanitize the input data
-    $fullName = isset($data['full_name']) ? $data['full_name'] : null;
-    $email = isset($data['email']) ? $data['email'] : null;
-    $phone = isset($data['phone']) ? $data['phone'] : null;
-    $address = isset($data['address']) ? $data['address'] : null;
+    $fullName = isset($data['full_name']) ? $data['full_name'] : null; // Use 'full_name'
+    $email = isset($data['email']) ? $data['email'] : null;           // Use 'email'
+    $phone = isset($data['phone']) ? $data['phone'] : null;           // Use 'phone'
     $roomId = isset($data['room_id']) ? intval($data['room_id']) : null;
     $checkIn = isset($data['check_in']) ? $data['check_in'] : null;
     $checkOut = isset($data['check_out']) ? $data['check_out'] : null;
@@ -59,14 +58,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Guest does not exist, insert new guest
         $stmt->close();
-        $sql = "INSERT INTO guests (full_name, email, phone, address) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO guests (full_name, email, phone) VALUES (?, ?, ?)";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             http_response_code(500); // Internal Server Error
             echo json_encode(['error' => 'Failed to prepare SQL statement: ' . $conn->error]);
             exit;
         }
-        $stmt->bind_param('ssss', $fullName, $email, $phone, $address);
+        $stmt->bind_param('sss', $fullName, $email, $phone);
         if (!$stmt->execute()) {
             http_response_code(500); // Internal Server Error
             echo json_encode(['error' => 'Failed to insert guest: ' . $stmt->error]);
@@ -99,8 +98,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Bind the parameters
     $stmt->bind_param(
         'iisssssss', // Types: i = integer, s = string, d = double
-        $guestId, $roomId, $checkIn, $checkOut, $totalPrice,
-        $reservationStatus, $roomPlan, $extras, $paymentMethod
+        $guestId,
+        $roomId,
+        $checkIn,
+        $checkOut,
+        $totalPrice,
+        $reservationStatus,
+        $roomPlan,
+        $extras,
+        $paymentMethod
     );
 
     // Execute the query
@@ -128,4 +134,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Close the database connection
 $conn->close();
-?>

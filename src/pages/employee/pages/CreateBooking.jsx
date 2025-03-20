@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { CalendarIcon, UserIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import GetRoomsBooking from "../../../hook/GetRoomBooking";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const RoomBooking = () => {
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
@@ -9,6 +10,7 @@ const RoomBooking = () => {
   const [roomType, setRoomType] = useState("all");
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state for form submission
   const [rooms, setRooms] = useState([]);
   const [guestInfo, setGuestInfo] = useState({
     name: "",
@@ -43,9 +45,10 @@ const RoomBooking = () => {
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     if (!guestInfo.name || !guestInfo.email || !guestInfo.phone || !checkInDate || !checkOutDate) {
-      alert("Please fill in all required fields.");
+      toast.error("Please fill in all required fields.");
       return;
     }
 
@@ -58,28 +61,35 @@ const RoomBooking = () => {
       room_plan: selectedRoom.name,
       extras: guestInfo.specialRequests,
       payment_method: guestInfo.paymentMethod,
+      full_name: guestInfo.name, // Use 'full_name' instead of 'guest_name'
+      email: guestInfo.email,    // Use 'email' instead of 'guest_email'
+      phone: guestInfo.phone,    // Use 'phone' instead of 'guest_phone'
     };
 
     fetch('http://localhost:8000/add_booking.php', {
       method: 'POST',
       headers: {
-          'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(booking),
-  })
-  .then(response => response.json())
-  .then(data => {
-      if (data.booking_id) {
-          alert('Booking successful! Booking ID: ' + data.booking_id);
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.booking_id) {
+          toast.success('Booking successful! Booking ID: ' + data.booking_id);
           // Redirect or show confirmation
-      } else {
-          alert('Error: ' + data.error);
-      }
-  })
-  .catch(error => {
-      console.error('Error:', error);
-      alert('An error occurred. Please try again.');
-  });
+        } else {
+          toast.error('Error: ' + data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        toast.error('An error occurred. Please try again.');
+      })
+      .finally(() => {
+        setIsSubmitting(false); // Reset loading state
+        setIsBookingModalOpen(false)
+      });
   };
 
   // const rooms = [
@@ -171,13 +181,13 @@ const RoomBooking = () => {
             >
               <option value="all">All</option>
               <option value="Suite">Suite</option>
-            <option value="Standard">Standard</option>
-            <option value="Superior">Superior</option>
-            <option value="Deluxe">Deluxe</option>
-            <option value="Suite">Suite</option>
-            <option value="Villa">Villa</option>
-            <option value="Ocean View">Ocean View</option>
-            <option value="Pool View">Pool View</option>
+              <option value="Standard">Standard</option>
+              <option value="Superior">Superior</option>
+              <option value="Deluxe">Deluxe</option>
+              <option value="Suite">Suite</option>
+              <option value="Villa">Villa</option>
+              <option value="Ocean View">Ocean View</option>
+              <option value="Pool View">Pool View</option>
             </select>
           </div>
         </div>
@@ -284,8 +294,9 @@ const RoomBooking = () => {
               <button
                 type="submit"
                 className="w-full p-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                disabled={isSubmitting} // Disable button while submitting
               >
-                Confirm Booking
+                {isSubmitting ? "Booking..." : "Book"}
               </button>
             </form>
             <button
