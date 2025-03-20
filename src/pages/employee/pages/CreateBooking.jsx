@@ -50,7 +50,6 @@ const RoomBooking = () => {
     }
 
     const booking = {
-      guest_id: 1, // This should be dynamically set based on logged-in user or guest info
       room_id: selectedRoom.id,
       check_in: checkInDate,
       check_out: checkOutDate,

@@ -1,5 +1,6 @@
 <?php
 require './database/config.php'; // Database connection (MySQLi)
+
 // Set headers for CORS and JSON response
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -12,13 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
+
 // Check if the request method is POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the raw POST data
     $data = json_decode(file_get_contents('php://input'), true);
 
     // Validate and sanitize the input data
-    $guestId = isset($data['guest_id']) ? intval($data['guest_id']) : null;
+    $fullName = isset($data['full_name']) ? $data['full_name'] : null;
+    $email = isset($data['email']) ? $data['email'] : null;
+    $phone = isset($data['phone']) ? $data['phone'] : null;
+    $address = isset($data['address']) ? $data['address'] : null;
     $roomId = isset($data['room_id']) ? intval($data['room_id']) : null;
     $checkIn = isset($data['check_in']) ? $data['check_in'] : null;
     $checkOut = isset($data['check_out']) ? $data['check_out'] : null;
@@ -29,10 +34,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $paymentMethod = isset($data['payment_method']) ? $data['payment_method'] : null;
 
     // Validate required fields
-    if (!$guestId || !$roomId || !$checkIn || !$checkOut || !$totalPrice || !$paymentMethod) {
+    if (!$fullName || !$email || !$roomId || !$checkIn || !$checkOut || !$totalPrice || !$paymentMethod) {
         http_response_code(400); // Bad Request
         echo json_encode(['error' => 'Missing required fields']);
         exit;
+    }
+
+    // Check if the guest already exists
+    $sql = "SELECT id FROM guests WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        http_response_code(500); // Internal Server Error
+        echo json_encode(['error' => 'Failed to prepare SQL statement: ' . $conn->error]);
+        exit;
+    }
+    $stmt->bind_param('s', $email);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($guestId);
+
+    if ($stmt->fetch()) {
+        // Guest exists, use the existing guest ID
+        $stmt->close();
+    } else {
+        // Guest does not exist, insert new guest
+        $stmt->close();
+        $sql = "INSERT INTO guests (full_name, email, phone, address) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(['error' => 'Failed to prepare SQL statement: ' . $conn->error]);
+            exit;
+        }
+        $stmt->bind_param('ssss', $fullName, $email, $phone, $address);
+        if (!$stmt->execute()) {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(['error' => 'Failed to insert guest: ' . $stmt->error]);
+            exit;
+        }
+        $guestId = $stmt->insert_id;
+        $stmt->close();
     }
 
     // Prepare the SQL query to insert the booking
