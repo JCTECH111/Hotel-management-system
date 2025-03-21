@@ -75,13 +75,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     }
 
+    // Generate a unique booking ID
+    function generateBookingId() {
+        $randomNumber = mt_rand(100000, 999999); // 6-digit random number
+        $timestamp = time(); // Current Unix timestamp
+        $bookingId = $timestamp . $randomNumber;
+        $bookingId = substr($bookingId, -6); // Ensure 6 digits
+        return $bookingId;
+    }
+    $bookingId = generateBookingId();
+
     // Prepare the SQL query to insert the booking
     $sql = "
         INSERT INTO bookings (
-            guest_id, room_id, check_in, check_out, total_price, 
+            booking_id, guest_id, room_id, check_in, check_out, total_price, 
             reservation_status, room_plan, extras, payment_method
         ) VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
         )
     ";
 
@@ -97,7 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Bind the parameters
     $stmt->bind_param(
-        'iisssssss', // Types: i = integer, s = string, d = double
+        'iiisssssss', // Types: i = integer, s = string, d = double
+        $bookingId,
         $guestId,
         $roomId,
         $checkIn,
