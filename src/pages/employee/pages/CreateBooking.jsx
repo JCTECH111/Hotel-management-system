@@ -58,7 +58,7 @@ const RoomBooking = () => {
       check_out: checkOutDate,
       total_price: selectedRoom.price * ((new Date(checkOutDate) - new Date(checkInDate)) / (1000 * 60 * 60 * 24)),
       reservation_status: "Reserved",
-      room_plan: selectedRoom.name,
+      room_plan: selectedRoom.type,
       extras: guestInfo.specialRequests,
       payment_method: guestInfo.paymentMethod,
       full_name: guestInfo.name, // Use 'full_name' instead of 'guest_name'
