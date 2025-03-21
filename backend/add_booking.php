@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Bind the parameters
     $stmt->bind_param(
-        'iiisssssss', // Types: i = integer, s = string, d = double
+        'siisssssss', // Types: s = string, i = integer
         $bookingId,
         $guestId,
         $roomId,
@@ -122,15 +122,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Execute the query
     if ($stmt->execute()) {
-        // Get the last inserted booking ID
-        $bookingId = $stmt->insert_id;
+        // Update the reservation status to 'Checked In'
+        $updatedStatus = 'Checked In';
 
-        // Return success response with booking ID
-        http_response_code(201); // Created
-        echo json_encode([
-            'message' => 'Booking created successfully',
-            'booking_id' => $bookingId
-        ]);
+        // SQL query to update the reservation status
+        $updateSql = "UPDATE bookings SET reservation_status = ? WHERE booking_id = ?";
+
+        // Prepare the update statement
+        $updateStmt = $conn->prepare($updateSql);
+
+        // Check if the update statement was prepared successfully
+        if (!$updateStmt) {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(['error' => 'Failed to prepare update SQL statement: ' . $conn->error]);
+            exit;
+        }
+
+        // Bind the parameters for the update statement
+        $updateStmt->bind_param('ss', $updatedStatus, $bookingId); // 'ss' means both are strings
+
+        // Execute the update statement
+        if ($updateStmt->execute()) {
+            // Return success response with booking ID
+            http_response_code(201); // Created
+            echo json_encode([
+                'message' => 'Booking created and status updated successfully',
+                'booking_id' => $bookingId
+            ]);
+        } else {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(['error' => 'Failed to execute update SQL statement: ' . $updateStmt->error]);
+        }
+
+        // Close the update statement
+        $updateStmt->close();
     } else {
         http_response_code(500); // Internal Server Error
         echo json_encode(['error' => 'Failed to execute SQL statement: ' . $stmt->error]);
@@ -145,3 +170,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Close the database connection
 $conn->close();
+?>

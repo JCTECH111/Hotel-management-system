@@ -5,7 +5,7 @@ function GetBookedRoom() {
   const [bookedRoom, setBookedRoom] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+ 
   useEffect(() => {
     // Function to fetch BookedRoom from the backend
     const fetchBookedRoom = async () => {
@@ -22,7 +22,7 @@ function GetBookedRoom() {
     fetchBookedRoom();
   }, []);
 
-  return { BookedRoom, loading, error };
+  return { bookedRoom, loading, error };
 }
 
 export default GetBookedRoom;
