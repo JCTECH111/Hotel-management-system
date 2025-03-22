@@ -28,6 +28,7 @@ function Bookings() {
       });
       const value = response.data;
       setSelectedBooking(value); // Update selected booking state
+      console.log(value)
     } catch (error) {
       console.error('Error fetching booking details:', error);
       setSelectedBooking(null); // Clear selected booking on error
