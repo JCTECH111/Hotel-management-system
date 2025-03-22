@@ -49,16 +49,36 @@ function Bookings() {
             <p className="ml-4 text-gray-700">Loading booking details...</p>
           </div>
         ) : selectedBooking ? (
-          <div className="mb-8 bg-gray-50 p-6 rounded-lg shadow-sm">
-            <h2 className="text-xl font-bold mb-4">Booking Details</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="mb-8 bg-gray-50 p-6 rounded-lg shadow-sm flex flex-col md:flex-row gap-4">
+          <img
+          src="https://www.startpage.com/av/proxy-image?piurl=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.7ITF2gx8_a3s4NbnDOpZzAHaHa%26pid%3DApi&sp=1742663222T92eaef0c3425c0a2e6fc58d5c01b716e8bcc10e947cccab93961bf387b8d5d7a"
+          alt="roombooked"
+          className="rounded-lg md:w-1/4 w-full h-40 object-cover object-ceter"
+        />
+            <div className="flex flex-col gap-4">
               <div>
-                <h3 className="text-lg font-semibold">Client: {selectedBooking.full_name}</h3>
-                <p>Order ID: #{selectedBooking.booking_id}</p>
+                <h3 className="text-2xl font-semibold"> {selectedBooking.guest_name}</h3>
+                <p className="text-lg font-semibold mt-2">Order ID: #{selectedBooking.booking_id}</p>
               </div>
-              <div>
-                <p><strong>Check-in:</strong> {new Date(selectedBooking.check_in).toLocaleDateString('en-US')}</p>
-                <p><strong>Check-out:</strong> {new Date(selectedBooking.check_out).toLocaleDateString('en-US')}</p>
+              <div className='flex flex-col md:flex-row gap-12 justify-content-center items-center'>
+                <div>
+                  <h3 className="text-xl font-semibold">Check In</h3>
+                  <p className='text-lg'>{new Date(selectedBooking.check_in).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}</p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">Check Out</h3>
+                  <p>{new Date(selectedBooking.check_out).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}</p>
+                </div>
               </div>
               <div>
                 <p><strong>Room Plan:</strong> {selectedBooking.room_plan}</p>
