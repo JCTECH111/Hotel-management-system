@@ -142,12 +142,24 @@ const Rooms = () => {
             </p>
             <div className="flex justify-between p-2">
               <div
-                className={`px-3 py-1 rounded-full text-sm w-fit ${room.status === "available"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-red-100 text-red-800"
-                  }`}
+                className={`px-3 py-1 rounded-full text-sm w-fit ${(() => {
+                  switch (room.status) {
+                    case 'Available':
+                      return 'bg-green-100 text-green-800';
+                    case 'Occupied':
+                      return 'bg-red-100 text-red-800';
+                    case 'Cleaning':
+                      return 'bg-yellow-100 text-yellow-800';
+                    case 'Maintenance':
+                      return 'bg-blue-100 text-blue-800';
+                    case 'Reserved':
+                      return 'bg-purple-100 text-purple-800';
+                    default:
+                      return 'bg-gray-100 text-gray-800'; // Fallback for unknown status
+                  }
+                })()}`}
               >
-                {room.status === "available" ? "Available" : "Booked"}
+                {room.status}
               </div>
               <Link to={`/employee/room/${room.id}`}>
                 <EyeIcon className="text-green-800 cursor-pointer w-6 h-6" />

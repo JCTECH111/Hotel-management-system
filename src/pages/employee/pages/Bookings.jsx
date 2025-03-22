@@ -1,49 +1,90 @@
-import { BarsArrowUpIcon, MagnifyingGlassIcon, PlusIcon, EyeIcon } from '@heroicons/react/24/outline'
-import { Link } from 'react-router-dom'
-import GetBookedRoom from '../../../hook/GetBookedRoom'
-import { useEffect, useState } from 'react'
-
+import { BarsArrowUpIcon, MagnifyingGlassIcon, PlusIcon, EyeIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
+import GetBookedRoom from '../../../hook/GetBookedRoom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 function Bookings() {
-  const [bookedBookings, setBookedBookings] = useState([]);
+  const [selectedBooking, setSelectedBooking] = useState(null); // Initialize as null
+  const [selectLoading, setSelectLoading] = useState(false);
   const { bookedRoom: GottenBookedItems, loading: roomsLoading, error: roomsError } = GetBookedRoom();
 
   const [searchInput, setSearchInput] = useState('');
 
   // Filter bookings based on search input
-  const filteredBookings = bookedBookings.filter((booking) =>
+  const filteredBookings = GottenBookedItems.filter((booking) =>
     booking.booking_id.toLowerCase().includes(searchInput.toLowerCase()) ||
     booking.full_name.toLowerCase().includes(searchInput.toLowerCase()) ||
     booking.room_plan.toLowerCase().includes(searchInput.toLowerCase())
   );
 
-  useEffect(() => {
-    if (GottenBookedItems.length > 0) {
-      setBookedBookings(GottenBookedItems);
-      console.log(GottenBookedItems)
+  const handleViewBooking = async (bookingId) => {
+    setSelectLoading(true); // Set loading state to true
+    try {
+      const response = await axios.get(`http://localhost:8000/get_booking.php`, {
+        params: {
+          booking_id: bookingId,
+        },
+      });
+      const value = response.data;
+      setSelectedBooking(value); // Update selected booking state
+    } catch (error) {
+      console.error('Error fetching booking details:', error);
+      setSelectedBooking(null); // Clear selected booking on error
+    } finally {
+      setSelectLoading(false); // Reset loading state
     }
-  }, [GottenBookedItems]);
+  };
 
-
-  // Error state
-  if (roomsError) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <p className="text-red-500 text-lg">Error: {roomsError}</p>
-      </div>
-    );
-  }
   return (
     <div>
       <div className="bg-white p-4 rounded-lg shadow-md mb-14">
         <h3 className="text-lg font-semibold mb-4">Booking Activities</h3>
-        <div className="w-full flex justify-end  mb-4">
+
+        {/* Display Selected Booking Details */}
+        {selectLoading ? (
+          <div className="flex justify-center items-center h-16">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <p className="ml-4 text-gray-700">Loading booking details...</p>
+          </div>
+        ) : selectedBooking ? (
+          <div className="mb-8 bg-gray-50 p-6 rounded-lg shadow-sm">
+            <h2 className="text-xl font-bold mb-4">Booking Details</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h3 className="text-lg font-semibold">Client: {selectedBooking.full_name}</h3>
+                <p>Order ID: #{selectedBooking.booking_id}</p>
+              </div>
+              <div>
+                <p><strong>Check-in:</strong> {new Date(selectedBooking.check_in).toLocaleDateString('en-US')}</p>
+                <p><strong>Check-out:</strong> {new Date(selectedBooking.check_out).toLocaleDateString('en-US')}</p>
+              </div>
+              <div>
+                <p><strong>Room Plan:</strong> {selectedBooking.room_plan}</p>
+                <p><strong>Room Number:</strong> {selectedBooking.room_number}</p>
+              </div>
+              <div>
+                <p><strong>Status:</strong> {selectedBooking.reservation_status}</p>
+              </div>
+              <div>
+                <p><strong>Extras:</strong></p>
+                <ul>
+                  {selectedBooking.extras && <li>{selectedBooking.extras}</li>}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {/* Create New Booking Button */}
+        <div className="w-full flex justify-end mb-4">
           <Link to="/employee/room-booking" className="flex justify-center items-center gap-2 px-4 py-2 cursor-pointer bg-green-600 font-bold text-white whitespace-nowrap rounded-xl">
-            <PlusIcon className="w-5 h-5 " />
-            <button className="cursor-pointer  text-white rounded">Create new booking</button>
+            <PlusIcon className="w-5 h-5" />
+            <button className="cursor-pointer text-white rounded">Create new booking</button>
           </Link>
         </div>
 
+        {/* Search and Sort Section */}
         <div className="p-2">
           <form className="flex items-center md:flex-row flex-col gap-4 w-full">
             {/* Search Input */}
@@ -68,11 +109,12 @@ function Bookings() {
             </button>
           </form>
         </div>
+
         {/* Responsive Scroll Wrapper */}
         <div className="overflow-auto">
-          <table className="w-full min-w-[600px] border-collapse ">
+          <table className="w-full min-w-[600px] border-collapse">
             <thead>
-              <tr className="bg-gray-200  text-left">
+              <tr className="bg-gray-200 text-left">
                 <th className="p-3 whitespace-nowrap">Book ID</th>
                 <th className="p-3 whitespace-nowrap">Name</th>
                 <th className="p-3 whitespace-nowrap">Room</th>
@@ -85,59 +127,61 @@ function Bookings() {
             </thead>
             <tbody>
               {roomsLoading ? (
-                <tr colSpan={8}>
-                <div className="flex justify-center items-center h-64">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-                  <p className="ml-4 text-gray-700">Loading bookings...</p>
-                </div>
+                <tr>
+                  <td colSpan="8">
+                    <div className="flex justify-center items-center h-64">
+                      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                      <p className="ml-4 text-gray-700">Loading bookings...</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : filteredBookings.length === 0 ? (
+                <tr>
+                  <td colSpan="8">
+                    <div className="flex justify-center items-center h-64">
+                      <p className="text-gray-700 text-lg">No matching bookings found.</p>
+                    </div>
+                  </td>
                 </tr>
               ) : (
-                GottenBookedItems.length == 0 ? (
-                  <tr className='text-center py-8' colSpan={8}>
-                  <div className="flex justify-center items-center h-64">
-                    <p className="text-gray-700 text-lg">No bookings found.</p>
-                  </div>
-                  </tr>
-                ) : (
-                  filteredBookings.map((booking) => {
-                    const checkInDate = new Date(booking.check_in).toLocaleDateString('en-US', {
-                      weekday: 'short',
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    });
-                    const checkOutDate = new Date(booking.check_out).toLocaleDateString('en-US', {
-                      weekday: 'short',
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    });
+                filteredBookings.map((booking) => {
+                  const checkInDate = new Date(booking.check_in).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  });
+                  const checkOutDate = new Date(booking.check_out).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  });
 
-                    return (
-                      <tr key={booking.booking_id} className="border-t border-gray-100 bg-gray-50 hover:bg-gray-100 transition">
-                        <td className="p-3 whitespace-nowrap">{booking.booking_id}</td>
-                        <td className="p-3 whitespace-nowrap">{booking.full_name}</td>
-                        <td className="p-3 whitespace-nowrap">{booking.room_plan}</td>
-                        <td className="p-3 whitespace-nowrap">{checkInDate}</td>
-                        <td className="p-3 whitespace-nowrap">{checkOutDate}</td>
-                        <td className="p-3 whitespace-nowrap">1 Person</td>
-                        <td className="p-3 whitespace-nowrap text-blue-500 font-semibold">{booking.reservation_status}</td>
-                        <td className="p-3 whitespace-nowrap text-gray-700 font-semibold">
-                          <Link to={`/employee/room/${booking.room_id}`}>
-                            <EyeIcon className="w-7 h-6 cursor-pointer" />
-                          </Link>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )
+                  return (
+                    <tr key={booking.booking_id} className="border-t border-gray-100 bg-gray-50 hover:bg-gray-100 transition">
+                      <td className="p-3 whitespace-nowrap">{booking.booking_id}</td>
+                      <td className="p-3 whitespace-nowrap">{booking.full_name}</td>
+                      <td className="p-3 whitespace-nowrap">{booking.room_plan}</td>
+                      <td className="p-3 whitespace-nowrap">{checkInDate}</td>
+                      <td className="p-3 whitespace-nowrap">{checkOutDate}</td>
+                      <td className="p-3 whitespace-nowrap">1 Person</td>
+                      <td className="p-3 whitespace-nowrap text-blue-500 font-semibold">{booking.reservation_status}</td>
+                      <td className="p-3 whitespace-nowrap text-gray-700 font-semibold">
+                        <button onClick={() => handleViewBooking(booking.booking_id)}>
+                          <EyeIcon className="w-7 h-6 cursor-pointer" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Bookings
+export default Bookings;
