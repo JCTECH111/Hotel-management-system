@@ -22,12 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             guests.email, 
             guests.phone, 
             room_images.image_url, 
-            facilities.name AS facility_name
+            facilities.name AS facility_name, 
+            rooms.*
         FROM bookings
         INNER JOIN guests ON bookings.guest_id = guests.id
         INNER JOIN room_images ON bookings.room_id = room_images.room_id
         INNER JOIN room_facilities ON bookings.room_id = room_facilities.room_id
         INNER JOIN facilities ON room_facilities.facility_id = facilities.id
+        INNER JOIN rooms ON bookings.room_id = rooms.id
         WHERE bookings.booking_id = ?
     ";
     $stmt = $conn->prepare($sql);
@@ -53,9 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'check_in' => $rows[0]['check_in'],
             'check_out' => $rows[0]['check_out'],
             'room_plan' => $rows[0]['room_plan'],
+            'total_price' => $rows[0]['total_price'],
+            'capacity' => $rows[0]['capacity'],
             'reservation_status' => $rows[0]['reservation_status'],
             'room_images' => array_unique(array_column($rows, 'image_url')),
             'facilities' => array_unique(array_column($rows, 'facility_name')),
+            'room_details' => [
+                'room_number' => $rows[0]['room_number'],
+                'room_type' => $rows[0]['type']
+                // Add other room details here
+            ],
         ];
 
         http_response_code(200); // OK

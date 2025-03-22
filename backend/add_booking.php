@@ -26,18 +26,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $roomId = isset($data['room_id']) ? intval($data['room_id']) : null;
     $checkIn = isset($data['check_in']) ? $data['check_in'] : null;
     $checkOut = isset($data['check_out']) ? $data['check_out'] : null;
-    $totalPrice = isset($data['total_price']) ? floatval($data['total_price']) : null;
     $reservationStatus = isset($data['reservation_status']) ? $data['reservation_status'] : 'Reserved';
     $roomPlan = isset($data['room_plan']) ? $data['room_plan'] : null;
     $extras = isset($data['extras']) ? $data['extras'] : null;
     $paymentMethod = isset($data['payment_method']) ? $data['payment_method'] : null;
 
     // Validate required fields
-    if (!$fullName || !$email || !$roomId || !$checkIn || !$checkOut || !$totalPrice || !$paymentMethod) {
+    if (!$fullName || !$email || !$roomId || !$checkIn || !$checkOut || !$paymentMethod) {
         http_response_code(400); // Bad Request
         echo json_encode(['error' => 'Missing required fields']);
         exit;
     }
+
+    // Check if the room is already occupied
+    $sql = "SELECT status FROM rooms WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        http_response_code(500); // Internal Server Error
+        echo json_encode(['error' => 'Failed to prepare SQL statement: ' . $conn->error]);
+        exit;
+    }
+    $stmt->bind_param('i', $roomId);
+    $stmt->execute();
+    $stmt->bind_result($roomStatus);
+    $stmt->fetch();
+    $stmt->close();
+
+    // If the room is occupied, return an error
+    if ($roomStatus === 'Occupied') {
+        http_response_code(409); // Conflict
+        echo json_encode(['error' => 'This room is already occupied and cannot be booked']);
+        exit;
+    }
+
+    // Fetch the base price of the room
+    $sql = "SELECT price FROM rooms WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        http_response_code(500); // Internal Server Error
+        echo json_encode(['error' => 'Failed to prepare SQL statement: ' . $conn->error]);
+        exit;
+    }
+    $stmt->bind_param('i', $roomId);
+    $stmt->execute();
+    $stmt->bind_result($basePrice);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Calculate the total price based on check_in and check_out dates
+    $checkInDate = new DateTime($checkIn);
+    $checkOutDate = new DateTime($checkOut);
+    $interval = $checkInDate->diff($checkOutDate); // Calculate the difference between dates
+    $totalHours = $interval->days * 24 + $interval->h; // Convert days to hours and add remaining hours
+
+    // Calculate the number of 24-hour intervals
+    $intervals = intval($totalHours / 24);
+
+    // Calculate the total price
+    $totalPrice = $basePrice * pow(2, $intervals); // Double the price for every 24-hour interval
 
     // Check if the guest already exists
     $sql = "SELECT id FROM guests WHERE email = ?";
@@ -141,8 +187,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $updateStmt->close();
 
-        // Update the room status to 'Occupied' or 'Reserved'
-        $roomStatus = 'Occupied'; // or 'Reserved', depending on your logic
+        // Update the room status to 'Occupied'
+        $roomStatus = 'Occupied';
         $updateRoomSql = "UPDATE rooms SET status = ? WHERE id = ?";
         $updateRoomStmt = $conn->prepare($updateRoomSql);
         if (!$updateRoomStmt) {
@@ -158,11 +204,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $updateRoomStmt->close();
 
-        // Return success response with booking ID
+        // Return success response with booking ID and total price
         http_response_code(201); // Created
         echo json_encode([
             'message' => 'Booking created, status updated, and room status updated successfully',
-            'booking_id' => $bookingId
+            'booking_id' => $bookingId,
+            'total_price' => $totalPrice, // Include the calculated total price
         ]);
     } else {
         http_response_code(500); // Internal Server Error
