@@ -127,35 +127,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // SQL query to update the reservation status
         $updateSql = "UPDATE bookings SET reservation_status = ? WHERE booking_id = ?";
-
-        // Prepare the update statement
         $updateStmt = $conn->prepare($updateSql);
-
-        // Check if the update statement was prepared successfully
         if (!$updateStmt) {
             http_response_code(500); // Internal Server Error
             echo json_encode(['error' => 'Failed to prepare update SQL statement: ' . $conn->error]);
             exit;
         }
-
-        // Bind the parameters for the update statement
         $updateStmt->bind_param('ss', $updatedStatus, $bookingId); // 'ss' means both are strings
-
-        // Execute the update statement
-        if ($updateStmt->execute()) {
-            // Return success response with booking ID
-            http_response_code(201); // Created
-            echo json_encode([
-                'message' => 'Booking created and status updated successfully',
-                'booking_id' => $bookingId
-            ]);
-        } else {
+        if (!$updateStmt->execute()) {
             http_response_code(500); // Internal Server Error
             echo json_encode(['error' => 'Failed to execute update SQL statement: ' . $updateStmt->error]);
+            exit;
         }
-
-        // Close the update statement
         $updateStmt->close();
+
+        // Update the room status to 'Occupied' or 'Reserved'
+        $roomStatus = 'Occupied'; // or 'Reserved', depending on your logic
+        $updateRoomSql = "UPDATE rooms SET status = ? WHERE id = ?";
+        $updateRoomStmt = $conn->prepare($updateRoomSql);
+        if (!$updateRoomStmt) {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(['error' => 'Failed to prepare room update SQL statement: ' . $conn->error]);
+            exit;
+        }
+        $updateRoomStmt->bind_param('si', $roomStatus, $roomId); // 'si' means string and integer
+        if (!$updateRoomStmt->execute()) {
+            http_response_code(500); // Internal Server Error
+            echo json_encode(['error' => 'Failed to execute room update SQL statement: ' . $updateRoomStmt->error]);
+            exit;
+        }
+        $updateRoomStmt->close();
+
+        // Return success response with booking ID
+        http_response_code(201); // Created
+        echo json_encode([
+            'message' => 'Booking created, status updated, and room status updated successfully',
+            'booking_id' => $bookingId
+        ]);
     } else {
         http_response_code(500); // Internal Server Error
         echo json_encode(['error' => 'Failed to execute SQL statement: ' . $stmt->error]);
