@@ -62,7 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'facilities' => array_unique(array_column($rows, 'facility_name')),
             'room_details' => [
                 'room_number' => $rows[0]['room_number'],
-                'room_type' => $rows[0]['type']
+                'room_type' => $rows[0]['type'],
+                'room_id' => $rows[0]['id']
                 // Add other room details here
             ],
         ];
