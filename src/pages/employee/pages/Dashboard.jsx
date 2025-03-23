@@ -64,7 +64,7 @@ const Dashboard = () => {
                 <UserIcon className="w-6 h-6" /> Guests
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 to="/employee/messages"
                 onClick={() => setIsOpen(false)}
@@ -72,8 +72,8 @@ const Dashboard = () => {
               >
                 <ChatBubbleBottomCenterIcon className="w-6 h-6" /> Messages
               </Link>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <Link
                 to="/employee/settings"
                 onClick={() => setIsOpen(false)}
@@ -81,12 +81,12 @@ const Dashboard = () => {
               >
                 <CogIcon className="w-6 h-6" /> Settings
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link
                 to="/logout"
                 onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-red-500 hover:text-white rounded cursor-pointer relative top-40"
+                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-red-500 hover:text-white rounded cursor-pointer relative top-70"
               >
                 <ArrowLeftEndOnRectangleIcon className="w-6 h-6" /> Logout
               </Link>
