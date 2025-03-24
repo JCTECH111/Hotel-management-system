@@ -17,6 +17,7 @@ import EditRoom from "../pages/employee/pages/EditRoom";
 import RoomDetails from "../pages/employee/pages/RoomDetails";
 // import ManagerDashboard from "../pages/manager/pages/Dashboard"; // Add manager dashboard
 // import HousekeeperDashboard from "../pages/housekeeper/pages/Dashboard"; // Add housekeeper dashboard
+import GuestDashboard from "../pages/guest/pages/Dashboard";
 import Unauthorized from "../pages/Unauthorized"; // Add unauthorized page
 
 export default function AppRoutes() {
@@ -29,33 +30,33 @@ export default function AppRoutes() {
 
         {/* Protected Routes */}
         <Route
-  path="/employee"
-  element={
-    <PrivateRoute allowedRoles={["employee"]}>
-      <Home />
-    </PrivateRoute>
-  }
->
-  <Route index element={<Overview />} />
-  <Route path="rooms" element={<Rooms />} />
-  <Route path="bookings" element={<Bookings />} />
-  <Route path="messages" element={<ChatPage />} />
-  <Route path="guests" element={<GuestPage />} />
-  <Route path="settings" element={<Settings />} />
-  <Route path="messages/chat/:id" element={<ChatPage />} />
-  <Route path="add-room" element={<AddRoom />} />
-  <Route path="room/:id" element={<ViewRoom />} />
-  <Route path="room-details/:id" element={<RoomDetails />} />
-  <Route path="edit-room/:id" element={<EditRoom />} />
-  <Route path="room-booking" element={<RoomBooking />} />
-</Route>
+          path="/employee"
+          element={
+            <PrivateRoute allowedRoles={["employee"]}>
+              <Home />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Overview />} />
+          <Route path="rooms" element={<Rooms />} />
+          <Route path="bookings" element={<Bookings />} />
+          <Route path="messages" element={<ChatPage />} />
+          <Route path="guests" element={<GuestPage />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="messages/chat/:id" element={<ChatPage />} />
+          <Route path="add-room" element={<AddRoom />} />
+          <Route path="room/:id" element={<ViewRoom />} />
+          <Route path="room-details/:id" element={<RoomDetails />} />
+          <Route path="edit-room/:id" element={<EditRoom />} />
+          <Route path="room-booking" element={<RoomBooking />} />
+        </Route>
 
         {/* Guest Dashboard (Protected) */}
         <Route
           path="/guest-dashboard"
           element={
             <PrivateRoute allowedRoles={["guest"]}>
-              {/* <GuestDashboard /> */}
+              <GuestDashboard />
             </PrivateRoute>
           }
         />
