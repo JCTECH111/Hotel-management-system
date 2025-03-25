@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import {
   HomeIcon,
@@ -11,7 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 const GuestDashboard = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
