@@ -22,7 +22,7 @@ const GuestDashboard = () => {
           <ul className="space-y-4">
             <li>
               <Link
-                to="/employee/rooms"
+                to="/guest-dashboard/all-rooms"
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <InboxStackIcon className="w-6 h-6" /> Rooms
@@ -30,7 +30,7 @@ const GuestDashboard = () => {
             </li>
             <li>
               <Link
-                to="/employee/bookings"
+                to="/guest-dashboard/bookings"
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <ClipboardDocumentCheckIcon className="w-6 h-6" /> Bookings
@@ -38,7 +38,7 @@ const GuestDashboard = () => {
             </li>
             <li>
               <Link
-                to="/employee/contact"
+                to="/guest-dashboard/contact"
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <PhoneIcon className="w-6 h-6" /> Contact
@@ -46,7 +46,7 @@ const GuestDashboard = () => {
             </li>
             <li>
               <Link
-                to="/employee/settings"
+                to="/guest-dashboard/settings"
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <CogIcon className="w-6 h-6" /> Settings
@@ -76,7 +76,7 @@ const GuestDashboard = () => {
         <div className="md:hidden fixed mx-3 bottom-2 rounded-3xl left-0 right-0 bg-[#ECF3F3] border border-gray-300 shadow-xl flex justify-around items-center py-2 px-2 z-50">
           {/* Logo - Acts as home button */}
           <Link
-            to="/guest-dashboard/rooms"
+            to="/guest-dashboard/all-rooms"
             className="flex flex-col items-center hover:bg-green-700 hover:text-white rounded-xl p-2 transition-colors"
           >
             <InboxStackIcon className="w-6 h-6" />
