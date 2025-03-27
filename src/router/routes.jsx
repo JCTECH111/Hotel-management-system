@@ -19,6 +19,7 @@ import RoomDetails from "../pages/employee/pages/RoomDetails";
 // import HousekeeperDashboard from "../pages/housekeeper/pages/Dashboard"; // Add housekeeper dashboard
 import GuestDashboard from "../pages/guest/pages/Dashboard";
 import GuestRooms from "../pages/guest/pages/Rooms";
+import GuestViewRoom from "../pages/guest/pages/GuestViewRoom";
 import Unauthorized from "../pages/Unauthorized"; // Add unauthorized page
 
 export default function AppRoutes() {
@@ -62,7 +63,7 @@ export default function AppRoutes() {
           }
         >
              <Route path="all-rooms" element={<GuestRooms />} />
-             <Route path="all-rooms/:id" element={<ViewRoom />} />
+             <Route path="all-rooms/:id" element={<GuestViewRoom />} />
         </Route>
 
         {/* Manager Dashboard (Protected) */}
