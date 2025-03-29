@@ -20,6 +20,7 @@ import RoomDetails from "../pages/employee/pages/RoomDetails";
 import GuestDashboard from "../pages/guest/pages/Dashboard";
 import GuestRooms from "../pages/guest/pages/Rooms";
 import GuestViewRoom from "../pages/guest/pages/GuestViewRoom";
+import BookingSuccess from "../pages/guest/pages/BookingSuccess";
 import Unauthorized from "../pages/Unauthorized"; // Add unauthorized page
 
 export default function AppRoutes() {
@@ -64,6 +65,7 @@ export default function AppRoutes() {
         >
              <Route path="all-rooms" element={<GuestRooms />} />
              <Route path="all-rooms/:id" element={<GuestViewRoom />} />
+             <Route path="booking-success" element={<BookingSuccess />} />
         </Route>
 
         {/* Manager Dashboard (Protected) */}
