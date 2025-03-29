@@ -6,6 +6,7 @@ import axios from "axios";
 
 const GuestViewRoom = () => {
   const [showReviews, setShowReviews] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -26,38 +27,7 @@ const GuestViewRoom = () => {
 
     fetchRoom();
   }, [id]); // Re-fetch when `id` changes
-  // const room = {
-  //   id: 8,
-  //   name: "Deluxe No.002",
-  //   price: 340,
-  //   type: "Deluxe",
-  //   status: "Available",
-  //   images: ["https://th.bing.com/th/id/OIP.pMbbR4yghEce8r2rV5aIRQHaE4?pid=ImgDetMain", "https://th.bing.com/th/id/OIP.qRJFBjNjwd6WeVwwgkcDDgHaE7?pid=ImgDetMain", "https://th.bing.com/th/id/OIP.eL8nSM3Zv5vQJZL5EWKd4wHaFy?pid=ImgDetMain"],
-  //   amenities: ["Shower", "Sea View", "Refrigerator", "Internet", "King Bed"],
-  //   reviews: [
-  //     {
-  //       user: "John Doe",
-  //       rating: 5,
-  //       comment: "Amazing stay!",
-  //       time: "2 hours ago",
-  //       profileImg: "https://www.gravatar.com/avatar/?d=mp",
-  //     },
-  //     {
-  //       user: "Jane Smith",
-  //       rating: 4,
-  //       comment: "Very comfortable.",
-  //       time: "1 day ago",
-  //       profileImg: "https://www.gravatar.com/avatar/?d=mp",
-  //     },
-  //     {
-  //       user: "Alex Brown",
-  //       rating: 3,
-  //       comment: "It was okay.",
-  //       time: "3 days ago",
-  //       profileImg: "https://www.gravatar.com/avatar/?d=mp",
-  //     },
-  //   ],
-  // };
+ 
 
 
    // Step 4: Display the data
@@ -73,9 +43,9 @@ const GuestViewRoom = () => {
     <div className="max-w-6xl mx-auto p-1 relative mb-14">
     {/* Edit button */}
     <div className="w-full flex justify-end mb-4">
-      <Link to="#">
-        <button className="px-4 py-2 bg-orange-600 text-white rounded">Book Room</button>
-      </Link>
+        <button 
+        onClick={() => setShowBookingModal(true)}
+        className="px-4 py-2 bg-orange-600 text-white rounded">Book Room</button>
     </div>
 
     {/* Room Name and Price */}

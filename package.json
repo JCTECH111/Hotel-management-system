@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@paystack/inline-js": "^2.22.2",
     "@tailwindcss/postcss": "^4.0.9",
     "appwrite": "^17.0.0",
     "axios": "^1.8.1",
     "react": "^19.0.0",
+    "react-datepicker": "^8.2.1",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.2.0",
     "react-toastify": "^11.0.5",
