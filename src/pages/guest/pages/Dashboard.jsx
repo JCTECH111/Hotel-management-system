@@ -1,4 +1,4 @@
-// import { useState } from "react";
+import {  useContext } from "react";
 import { Link, Outlet } from "react-router-dom";
 import {
   HomeIcon,
@@ -9,9 +9,10 @@ import {
   InboxStackIcon,
   BellIcon,
 } from "@heroicons/react/24/outline";
-
+import { AuthContext } from "../../../context/AuthContext";
 const GuestDashboard = () => {
   // const [isOpen, setIsOpen] = useState(false);
+  const { user } = useContext(AuthContext);
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
@@ -30,7 +31,7 @@ const GuestDashboard = () => {
             </li>
             <li>
               <Link
-                to="/guest-dashboard/bookings"
+                to={`/guest-dashboard/booking-history/${user.email}`}
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <ClipboardDocumentCheckIcon className="w-6 h-6" /> Bookings
@@ -84,7 +85,7 @@ const GuestDashboard = () => {
           </Link>
 
           <Link
-            to="/guest-dashboard/bookings"
+            to="/guest-dashboard/booking-history"
             className="flex flex-col items-center hover:bg-green-700 hover:text-white rounded-xl p-2 transition-colors"
           >
             <ClipboardDocumentCheckIcon className="w-6 h-6" />
