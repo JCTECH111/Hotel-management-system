@@ -14,16 +14,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 // Use prepared statements to prevent SQL injection
-$user_email = $_GET["user_email"];
+$user_id = $_GET["user_id"];
 $stmt = $conn->prepare("SELECT * 
-                         FROM bookings
-                         INNER JOIN guests 
-                         ON bookings.guest_id = guests.id
-                         WHERE guests.email = ?");
+                       FROM bookings
+                       INNER JOIN guests 
+                       ON bookings.user_id = guests.user_id
+                       WHERE guests.user_id = ?");
 
 
     // Prepare the statement
-    $stmt->bind_param("s", $user_email);
+    $stmt->bind_param("i", $user_id);
     if (!$stmt) {
         http_response_code(500); // Internal Server Error
         echo json_encode(['error' => 'Failed to prepare SQL statement: ' . $conn->error]);

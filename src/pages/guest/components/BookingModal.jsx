@@ -1,13 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from "../../../context/AuthContext";
 const BookingModal = ({ 
   room, 
   onClose, 
   onBookingSuccess
 }) => {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate(); // Add this line
   const [bookingData, setBookingData] = useState({
     check_in: new Date(),
@@ -59,6 +61,7 @@ const BookingModal = ({
   const handlePaymentSuccess = async (reference) => {
     try {
       const bookingPayload = {
+        user_id: user.id,
         room_id: room.id,
         check_in: bookingData.check_in.toISOString().split('T')[0],
         check_out: bookingData.check_out.toISOString().split('T')[0],
@@ -155,6 +158,7 @@ const BookingModal = ({
     if (bookingData.payment_method === "cash") {
       try {
         const booking = {
+          user_id: user.id,
           room_id: room.id,
           check_in: bookingData.check_in.toISOString().split('T')[0],
           check_out: bookingData.check_out.toISOString().split('T')[0],

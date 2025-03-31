@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { CalendarIcon, UserIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import GetRoomsBooking from "../../../hook/GetRoomBooking";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../../../context/AuthContext";
 const RoomBooking = () => {
+  const { user } = useContext(AuthContext);
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
   const [guests, setGuests] = useState(1);
@@ -53,6 +55,7 @@ const RoomBooking = () => {
     }
 
     const booking = {
+      user_id: user.id,
       room_id: selectedRoom.id,
       check_in: checkInDate,
       check_out: checkOutDate,

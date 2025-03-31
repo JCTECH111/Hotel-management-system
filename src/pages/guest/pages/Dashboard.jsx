@@ -31,7 +31,7 @@ const GuestDashboard = () => {
             </li>
             <li>
               <Link
-                to={`/guest-dashboard/booking-history/${user.email}`}
+                to={`/guest-dashboard/booking-history/${user.id}`}
                 className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
               >
                 <ClipboardDocumentCheckIcon className="w-6 h-6" /> Bookings

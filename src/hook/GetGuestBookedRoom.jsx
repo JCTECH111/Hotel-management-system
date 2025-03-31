@@ -10,7 +10,7 @@ function GetGuestBookedRoom(id) {
     // Function to fetch BookedRoom from the backend
     const fetchBookedRoom = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/getGuestBookedRoom.php?user_email=${id}`); // Replace with your actual backend URL
+        const response = await axios.get(`http://localhost:8000/getGuestBookedRoom.php?user_id=${id}`); // Replace with your actual backend URL
         setBookedRoom(response.data); // Set the BookedRoom data
         setLoading(false);
       } catch (err) {

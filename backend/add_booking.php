@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullName = isset($data['full_name']) ? $data['full_name'] : null; // Use 'full_name'
     $email = isset($data['email']) ? $data['email'] : null;           // Use 'email'
     $phone = isset($data['phone']) ? $data['phone'] : null;           // Use 'phone'
+    $userId = isset($data['user_id']) ? intval($data['user_id']) : null;
     $roomId = isset($data['room_id']) ? intval($data['room_id']) : null;
     $checkIn = isset($data['check_in']) ? $data['check_in'] : null;
     $checkOut = isset($data['check_out']) ? $data['check_out'] : null;
@@ -32,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $paymentMethod = isset($data['payment_method']) ? $data['payment_method'] : null;
 
     // Validate required fields
-    if (!$fullName || !$email || !$roomId || !$checkIn || !$checkOut || !$paymentMethod) {
+    if (!$fullName || !$email || !$roomId || !$checkIn || !$checkOut || !$paymentMethod || !$userId) {
         http_response_code(400); // Bad Request
         echo json_encode(['error' => 'Missing required fields']);
         exit;
@@ -104,14 +105,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Guest does not exist, insert new guest
         $stmt->close();
-        $sql = "INSERT INTO guests (full_name, email, phone) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO guests (user_id, full_name, email, phone) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             http_response_code(500); // Internal Server Error
             echo json_encode(['error' => 'Failed to prepare SQL statement: ' . $conn->error]);
             exit;
         }
-        $stmt->bind_param('sss', $fullName, $email, $phone);
+        $stmt->bind_param('isss', $userId, $fullName, $email, $phone);
         if (!$stmt->execute()) {
             http_response_code(500); // Internal Server Error
             echo json_encode(['error' => 'Failed to insert guest: ' . $stmt->error]);
@@ -134,10 +135,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Prepare the SQL query to insert the booking
     $sql = "
         INSERT INTO bookings (
-            booking_id, guest_id, room_id, check_in, check_out, total_price, 
+            booking_id, guest_id, user_id, room_id, check_in, check_out, total_price, 
             reservation_status, room_plan, extras, payment_method
         ) VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
         )
     ";
 
@@ -153,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Bind the parameters
     $stmt->bind_param(
-        'siisssssss', // Types: s = string, i = integer
+        'siiisssssss', // Types: s = string, i = integer
         $bookingId,
         $guestId,
         $roomId,

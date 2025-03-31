@@ -135,14 +135,6 @@ function GuestBooked() {
           </div>
         ) : null}
 
-        {/* Create New Booking Button */}
-        <div className="w-full flex justify-end mb-4">
-          <Link to="/employee/room-booking" className="flex justify-center items-center gap-2 px-4 py-2 cursor-pointer bg-green-600 font-bold text-white whitespace-nowrap rounded-xl">
-            <PlusIcon className="w-5 h-5" />
-            <button className="cursor-pointer text-white rounded">Create new booking</button>
-          </Link>
-        </div>
-
         {/* Search and Sort Section */}
         <div className="p-2">
           <form className="flex items-center md:flex-row flex-col gap-4 w-full">
