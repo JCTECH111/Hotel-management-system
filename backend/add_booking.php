@@ -18,7 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the raw POST data
     $data = json_decode(file_get_contents('php://input'), true);
-
+    if (!isset($data['user_id'])) {
+        echo json_encode(["success" => false, "message" => "User ID is required"]);
+        exit;
+    }
     // Validate and sanitize the input data
     $fullName = isset($data['full_name']) ? $data['full_name'] : null; // Use 'full_name'
     $email = isset($data['email']) ? $data['email'] : null;           // Use 'email'

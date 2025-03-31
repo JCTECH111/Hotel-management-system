@@ -57,7 +57,7 @@ function GuestBooked() {
                 alt="roombooked"
                 className="rounded-lg  w-full h-40 object-cover object-ceter"
               />
-              <Link to={`/employee/room-details/${selectedBooking.room_details.room_id}`}>
+              <Link to={`/guest-dashboard/room-details/${selectedBooking.room_details.room_id}`}>
                 <button className='p-3 w-full flex items-center justify-center border-1 border-orange-500 rounded-xl hover:bg-orange-500 hover:text-white cursor-pointer'>See room details</button>
               </Link>
             </div>

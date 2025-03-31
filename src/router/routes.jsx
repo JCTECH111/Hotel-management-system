@@ -68,6 +68,7 @@ export default function AppRoutes() {
              <Route path="all-rooms/:id" element={<GuestViewRoom />} />
              <Route path="booking-success" element={<BookingSuccess />} />
              <Route path="booking-history/:id" element={<GuestBooked />} />
+             <Route path="room-details/:id" element={<RoomDetails />} />
         </Route>
 
         {/* Manager Dashboard (Protected) */}
