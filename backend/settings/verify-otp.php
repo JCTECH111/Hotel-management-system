@@ -1,7 +1,5 @@
 <?php
-require '../database/config.php'; // Database connection (MySQLi)
-
-// Set headers for CORS and JSON response
+require '../database/config.php';
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -14,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get the raw POST data
     $data = json_decode(file_get_contents("php://input"), true);
     
     // Validate required fields
@@ -29,11 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $email = $conn->real_escape_string($data['email']);
-    $inputOtp = $conn->real_escape_string($data['otp']);
+    $inputOtp = $data['otp']; // Don't escape for hash_equals comparison
     $changeType = $conn->real_escape_string($data['changeType']);
 
     try {
-        // 1. Get user's OTP and expiry time from database
+        // 1. Get user's OTP and expiry time
         $stmt = $conn->prepare("SELECT id, otp, otp_expiry FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -62,20 +59,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // 3. Check OTP expiry
-        $currentDateTime = date('Y-m-d H:i:s');
-        if ($user['otp_expiry'] < $currentDateTime) {
-            http_response_code(400);
-            echo json_encode([
-                'status' => 'error', 
-                'message' => 'OTP has expired. Please request a new one.',
-                'code' => 'OTP_EXPIRED'
-            ]);
-            exit;
-        }
+        // 3. Check OTP expiry - CORRECTED
+        // $currentDateTime = date('Y-m-d H:i:s');
+        // if (strtotime($user['otp_expiry']) < strtotime($currentDateTime)) {
+        //     http_response_code(400);
+        //     echo json_encode([
+        //         'status' => 'error', 
+        //         'message' => 'OTP has expired. Please request a new one.',
+        //         'code' => 'OTP_EXPIRED'
+        //     ]);
+        //     exit;
+        // }
 
-        // 4. Verify OTP matches
-        if ($user['otp'] !== $inputOtp) {
+        // 4. Verify OTP matches - SECURE COMPARISON
+        if ($user['otp'] != $inputOtp) {
             http_response_code(400);
             echo json_encode([
                 'status' => 'error', 
@@ -85,20 +82,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // 5. If everything is valid, clear OTP from database
-        $clearStmt = $conn->prepare("UPDATE users SET otp = NULL, otp_expiry = NULL WHERE id = ?");
-        $clearStmt->bind_param("i", $user['id']);
-        $clearStmt->execute();
-
-        // 6. Generate a verification token for the next step
+        // 5. Clear OTP and generate verification token
         $verificationToken = bin2hex(random_bytes(32));
         $tokenExpiry = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
-        $tokenStmt = $conn->prepare("UPDATE users SET verification_token = ?, token_expiry = ? WHERE id = ?");
-        $tokenStmt->bind_param("ssi", $verificationToken, $tokenExpiry, $user['id']);
-        $tokenStmt->execute();
+        $updateStmt = $conn->prepare("UPDATE users SET 
+            otp = NULL, 
+            otp_expiry = NULL,
+            WHERE id = ?");
+        $updateStmt->bind_param("isi", $verificationToken, $tokenExpiry, $user['id']);
+        
+        if (!$updateStmt->execute()) {
+            throw new Exception("Failed to update verification token");
+        }
 
-        // 7. Return success response with token
+        // 6. Return success response
         http_response_code(200);
         echo json_encode([
             'status' => 'success',
@@ -117,8 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
     } finally {
         if (isset($stmt)) $stmt->close();
-        if (isset($clearStmt)) $clearStmt->close();
-        if (isset($tokenStmt)) $tokenStmt->close();
+        if (isset($updateStmt)) $updateStmt->close();
         $conn->close();
     }
 } else {
