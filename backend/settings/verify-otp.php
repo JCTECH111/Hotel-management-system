@@ -13,12 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
-    
+
     // Validate required fields
     if (empty($data['otp']) || empty($data['email']) || empty($data['changeType'])) {
         http_response_code(400);
         echo json_encode([
-            'status' => 'error', 
+            'status' => 'error',
             'message' => 'Missing required fields',
             'code' => 'MISSING_FIELDS'
         ]);
@@ -35,11 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         if ($result->num_rows === 0) {
             http_response_code(404);
             echo json_encode([
-                'status' => 'error', 
+                'status' => 'error',
                 'message' => 'User not found',
                 'code' => 'USER_NOT_FOUND'
             ]);
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($user['otp'])) {
             http_response_code(400);
             echo json_encode([
-                'status' => 'error', 
+                'status' => 'error',
                 'message' => 'No OTP requested for this user',
                 'code' => 'NO_OTP_REQUESTED'
             ]);
@@ -60,22 +60,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // 3. Check OTP expiry - CORRECTED
-        // $currentDateTime = date('Y-m-d H:i:s');
-        // if (strtotime($user['otp_expiry']) < strtotime($currentDateTime)) {
-        //     http_response_code(400);
-        //     echo json_encode([
-        //         'status' => 'error', 
-        //         'message' => 'OTP has expired. Please request a new one.',
-        //         'code' => 'OTP_EXPIRED'
-        //     ]);
-        //     exit;
-        // }
+        $currentDateTime = date('Y-m-d H:i:s');
+        if (strtotime($user['otp_expiry']) < strtotime($currentDateTime)) {
+            http_response_code(400);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'OTP has expired. Please request a new one.',
+                'code' => 'OTP_EXPIRED'
+            ]);
+            exit;
+        }
 
         // 4. Verify OTP matches - SECURE COMPARISON
         if ($user['otp'] != $inputOtp) {
             http_response_code(400);
             echo json_encode([
-                'status' => 'error', 
+                'status' => 'error',
                 'message' => 'Invalid OTP. Please try again.',
                 'code' => 'INVALID_OTP'
             ]);
@@ -85,13 +85,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // 5. Clear OTP and generate verification token
         $verificationToken = bin2hex(random_bytes(32));
         $tokenExpiry = date('Y-m-d H:i:s', strtotime('+10 minutes'));
-
-        $updateStmt = $conn->prepare("UPDATE users SET 
-            otp = NULL, 
-            otp_expiry = NULL,
-            WHERE id = ?");
-        $updateStmt->bind_param("isi", $verificationToken, $tokenExpiry, $user['id']);
         
+        $updateStmt = $conn->prepare("UPDATE users SET 
+           otp = NULL, 
+           otp_expiry = NULL
+           WHERE email = ?");
+        $updateStmt->bind_param("s",  $email);
         if (!$updateStmt->execute()) {
             throw new Exception("Failed to update verification token");
         }
@@ -105,11 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'userId' => $user['id'],
             'changeType' => $changeType
         ]);
-        
     } catch (Exception $e) {
         http_response_code(500);
         echo json_encode([
-            'status' => 'error', 
+            'status' => 'error',
             'message' => 'Server error: ' . $e->getMessage(),
             'code' => 'SERVER_ERROR'
         ]);
@@ -121,9 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     http_response_code(405);
     echo json_encode([
-        'status' => 'error', 
+        'status' => 'error',
         'message' => 'Invalid request method',
         'code' => 'INVALID_METHOD'
     ]);
 }
-?>

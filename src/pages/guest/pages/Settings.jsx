@@ -73,8 +73,8 @@ function GuestSettings() {
           'Content-Type': 'application/json'
         }
       });
-  
-      if (response.data.success) {
+        
+      if (response.data.status) {
         setCurrentStep(3);
         setSuccess(response.data.message || 'OTP verified successfully');
         // Clear OTP field after successful verification
@@ -107,13 +107,13 @@ function GuestSettings() {
     setError('');
 
     try {
-      const response = await axios.post('/api/settings/update-credentials', {
+      const response = await axios.post('http://localhost:8000/settings/update-credentials.php', {
         changeType,
         newValue: changeType === 'password' ? formData.newPassword : formData.newUsername,
         email
       });
 
-      if (response.data.success) {
+      if (response.data.status) {
         setSuccess(`Your ${changeType} has been updated successfully!`);
         // Clear form and reset
         setTimeout(() => {
