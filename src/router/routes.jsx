@@ -24,6 +24,7 @@ import BookingSuccess from "../pages/guest/pages/BookingSuccess";
 import GuestBooked from "../pages/guest/pages/GuestBooked";
 import ContactUs from "../pages/guest/pages/ContactUs";
 import GuestSettings from "../pages/guest/pages/Settings";
+import GuestEditRoom from "../pages/guest/pages/GuestHome" 
 import Unauthorized from "../pages/Unauthorized"; // Add unauthorized page
 
 export default function AppRoutes() {
@@ -66,6 +67,7 @@ export default function AppRoutes() {
             </PrivateRoute>
           }
         >
+             <Route index element={<GuestEditRoom />} />
              <Route path="all-rooms" element={<GuestRooms />} />
              <Route path="all-rooms/:id" element={<GuestViewRoom />} />
              <Route path="booking-success" element={<BookingSuccess />} />
