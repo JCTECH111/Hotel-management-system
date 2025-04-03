@@ -25,6 +25,10 @@ import GuestBooked from "../pages/guest/pages/GuestBooked";
 import ContactUs from "../pages/guest/pages/ContactUs";
 import GuestSettings from "../pages/guest/pages/Settings";
 import GuestEditRoom from "../pages/guest/pages/GuestHome" 
+
+
+// manager
+import ManagersDashboard from "../pages/Manager/pages/ManagerDashboard";
 import Unauthorized from "../pages/Unauthorized"; // Add unauthorized page
 
 export default function AppRoutes() {
@@ -82,7 +86,7 @@ export default function AppRoutes() {
           path="/manager-dashboard"
           element={
             <PrivateRoute allowedRoles={["manager"]}>
-              {/* <ManagerDashboard /> */}
+              <ManagersDashboard />
             </PrivateRoute>
           }
         />
