@@ -14,16 +14,16 @@ import { AuthContext } from "../../../context/AuthContext";
 const ManagersDashboard = () => {
     const { user } = useContext(AuthContext);
     return (
-        <div className="flex flex-col md:flex-row min-h-screen">
+        <div className="flex flex-col min-h-screen md:flex-row">
       {/* Desktop Sidebar - Hidden on mobile */}
       <div className="hidden md:flex md:flex-col w-64 bg-[#ECF3F3] text-green-700 p-5">
-        <h2 className="text-lg font-bold mb-6">Hotel Admin</h2>
+        <h2 className="mb-6 text-lg font-bold">Hotel Admin</h2>
         <nav>
           <ul className="space-y-4">
             <li>
               <Link
-                to="/guest-dashboard/all-rooms"
-                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
+                to="/manager-dashboard/rooms"
+                className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
               >
                 <InboxStackIcon className="w-6 h-6" /> Rooms
               </Link>
@@ -31,7 +31,7 @@ const ManagersDashboard = () => {
             <li>
               <Link
                 to={`/guest-dashboard/booking-history/${user.id}`}
-                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
+                className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
               >
                 <ClipboardDocumentCheckIcon className="w-6 h-6" /> Bookings
               </Link>
@@ -39,7 +39,7 @@ const ManagersDashboard = () => {
             <li>
               <Link
                 to="/manager-dashboard/staffs"
-                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
+                className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
               >
                 <UserGroupIcon className="w-6 h-6" /> Staffs
               </Link>
@@ -47,7 +47,7 @@ const ManagersDashboard = () => {
             <li>
               <Link
                 to="/guest-dashboard/settings"
-                className="flex items-center gap-3 p-2 text-gray-800 font-bold hover:bg-green-600 hover:text-white rounded cursor-pointer"
+                className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
               >
                 <CogIcon className="w-6 h-6" /> Settings
               </Link>
@@ -57,18 +57,18 @@ const ManagersDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex flex-col flex-1">
         {/* Top Navbar - Hidden on mobile */}
         <nav className="hidden md:flex bg-[#ECF3F3] shadow-md p-4 justify-between items-center rounded-2xl m-2 mt-3">
           <h1 className="text-xl font-bold text-green-700">Overview</h1>
           <div className="flex items-center gap-4">
-            <BellIcon className="text-gray-600 cursor-pointer w-6 h-6" />
-            <UserIcon className="text-gray-600 cursor-pointer w-6 h-6" />
+            <BellIcon className="w-6 h-6 text-gray-600 cursor-pointer" />
+            <UserIcon className="w-6 h-6 text-gray-600 cursor-pointer" />
           </div>
         </nav>
 
         {/* Main Content Area */}
-        <main className="flex-1 p-4 md:p-6 overflow-y-auto pb-20 md:pb-4">
+        <main className="flex-1 p-4 pb-20 overflow-y-auto md:p-6 md:pb-4">
           <Outlet />
         </main>
 
@@ -76,35 +76,35 @@ const ManagersDashboard = () => {
         <div className="md:hidden fixed mx-3 bottom-2 rounded-3xl left-0 right-0 bg-[#ECF3F3] border border-gray-300 shadow-xl flex justify-around items-center py-2 px-2 z-50">
           {/* Logo - Acts as home button */}
           <Link
-            to="/guest-dashboard/all-rooms"
-            className="flex flex-col items-center hover:bg-green-700 hover:text-white rounded-xl p-2 transition-colors"
+            to="/manager-dashboard/rooms"
+            className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
           >
             <InboxStackIcon className="w-6 h-6" />
-            <span className="text-xs mt-1 font-medium">Rooms</span>
+            <span className="mt-1 text-xs font-medium">Rooms</span>
           </Link>
 
           <Link
             to={`/guest-dashboard/booking-history/${user.id}`}
-            className="flex flex-col items-center hover:bg-green-700 hover:text-white rounded-xl p-2 transition-colors"
+            className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
           >
             <ClipboardDocumentCheckIcon className="w-6 h-6" />
-            <span className="text-xs mt-1 font-medium">Bookings</span>
+            <span className="mt-1 text-xs font-medium">Bookings</span>
           </Link>
 
           <Link
             to="/manager-dashboard/staffs"
-            className="flex flex-col items-center hover:bg-green-700 hover:text-white rounded-xl p-2 transition-colors"
+            className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
           >
             <UserGroupIcon className="w-6 h-6" />
-            <span className="text-xs mt-1 font-medium">Staffs</span>
+            <span className="mt-1 text-xs font-medium">Staffs</span>
           </Link>
 
           <Link
             to="/guest-dashboard/settings"
-            className="flex flex-col items-center hover:bg-green-700 hover:text-white rounded-xl p-2 transition-colors"
+            className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
           >
             <CogIcon className="w-6 h-6" />
-            <span className="text-xs mt-1 font-medium">Settings</span>
+            <span className="mt-1 text-xs font-medium">Settings</span>
           </Link>
         </div>
       </div>

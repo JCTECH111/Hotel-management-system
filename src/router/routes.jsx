@@ -30,6 +30,8 @@ import GuestEditRoom from "../pages/guest/pages/GuestHome"
 // manager
 import ManagersDashboard from "../pages/Manager/pages/ManagerDashboard";
 import Staffs from "../pages/Manager/pages/Staffs";
+import ManagersRooms from "../pages/Manager/pages/ManagersRoom"
+import ManagersAddRoom from "../pages/Manager/pages/ManagersAddRoom"
 // Add unauthorized page
 import Unauthorized from "../pages/Unauthorized"; 
 
@@ -93,6 +95,8 @@ export default function AppRoutes() {
           }
         >
           <Route path="staffs" element={<Staffs />} />
+          <Route path="rooms" element={<ManagersRooms />} />
+          <Route path="add-room" element={<ManagersAddRoom />} />
         </Route>
 
         {/* Housekeeper Dashboard (Protected) */}
