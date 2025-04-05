@@ -35,6 +35,7 @@ import ManagersAddRoom from "../pages/Manager/pages/ManagersAddRoom"
 import ManagerBookings from "../pages/Manager/pages/ManagersBooking";
 // Add unauthorized page
 import Unauthorized from "../pages/Unauthorized"; 
+import ManagerRoomBooking from "../pages/Manager/pages/ManagerCreateBooking";
 
 export default function AppRoutes() {
   return (
@@ -100,6 +101,7 @@ export default function AppRoutes() {
           <Route path="room/:id" element={<ViewRoom />} />
           <Route path="add-room" element={<ManagersAddRoom />} />
           <Route path="bookings" element={<ManagerBookings />} />
+          <Route path="room-booking" element={<ManagerRoomBooking />} />
         </Route>
 
         {/* Housekeeper Dashboard (Protected) */}

@@ -136,7 +136,7 @@ function ManagerBookings() {
 
         {/* Create New Booking Button */}
         <div className="flex justify-end w-full mb-4">
-          <Link to="/employee/room-booking" className="flex items-center justify-center gap-2 px-4 py-2 font-bold text-white bg-green-600 cursor-pointer whitespace-nowrap rounded-xl">
+          <Link to="/manager-dashboard/room-booking" className="flex items-center justify-center gap-2 px-4 py-2 font-bold text-white bg-green-600 cursor-pointer whitespace-nowrap rounded-xl">
             <PlusIcon className="w-5 h-5" />
             <button className="text-white rounded cursor-pointer">Create new booking</button>
           </Link>
