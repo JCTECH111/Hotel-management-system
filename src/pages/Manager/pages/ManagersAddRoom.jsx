@@ -126,7 +126,7 @@ const ManagersAddRoom = () => {
           amenities: [],
           images: [],
         });
-        navigate("/employee/rooms")
+        navigate("/manager-dashboard/rooms")
       }
     } catch (error) {
       // Handle error

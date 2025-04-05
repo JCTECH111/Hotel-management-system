@@ -30,7 +30,7 @@ const ManagersDashboard = () => {
             </li>
             <li>
               <Link
-                to={`/guest-dashboard/booking-history/${user.id}`}
+                to="/manager-dashboard/bookings"
                 className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
               >
                 <ClipboardDocumentCheckIcon className="w-6 h-6" /> Bookings
@@ -84,7 +84,7 @@ const ManagersDashboard = () => {
           </Link>
 
           <Link
-            to={`/guest-dashboard/booking-history/${user.id}`}
+            to="/manager-dashboard/bookings"
             className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
           >
             <ClipboardDocumentCheckIcon className="w-6 h-6" />
