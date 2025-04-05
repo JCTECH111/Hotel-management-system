@@ -138,10 +138,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Prepare the SQL query to insert the booking
     $sql = "
         INSERT INTO bookings (
-            booking_id, guest_id, user_id, room_id, check_in, check_out, total_price, 
+            booking_id, guest_id,  room_id, check_in, check_out, total_price, 
             reservation_status, room_plan, extras, payment_method
         ) VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
         )
     ";
 
@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Bind the parameters
     $stmt->bind_param(
-        'siiisssssss', // Types: s = string, i = integer
+        'siisssssss', // Types: s = string, i = integer
         $bookingId,
         $guestId,
         $roomId,
