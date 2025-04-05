@@ -15,110 +15,120 @@ function ManagerStaffs() {
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
 
-  const roles = ['employee', 'housekeeper'];
-  const testStaffData = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john@hotel.com",
-      pin: "hashed_password_1", // In a real app, this would be hashed
-      role: "employee",
-      createdAt: "2023-05-15T08:00:00Z"
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@hotel.com",
-      pin: "hashed_password_2",
-      role: "housekeeper",
-      createdAt: "2023-06-20T10:30:00Z"
-    },
-    {
-      id: 3,
-      name: "Robert Johnson",
-      email: "robert@hotel.com",
-      pin: "hashed_password_3",
-      role: "employee",
-      createdAt: "2023-07-10T14:15:00Z"
-    },
-    {
-      id: 4,
-      name: "Emily Davis",
-      email: "emily@hotel.com",
-      pin: "hashed_password_4",
-      role: "housekeeper",
-      createdAt: "2023-08-05T09:45:00Z"
-    },
-    {
-      id: 5,
-      name: "Michael Wilson",
-      email: "michael@hotel.com",
-      pin: "hashed_password_5",
-      role: "employee",
-      createdAt: "2023-09-12T11:20:00Z"
-    }
-  ]
-  // useEffect(() => {
-  //   fetchStaffs();
-  // }, []);
+  const roles = ['employee', 'housekeeper', 'manager', 'guest']; // Added all roles from your DB enum
 
-  // const fetchStaffs = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await axios.get('/api/staffs');
-  //     setStaffs(response.data);
-  //   } catch (error) {
-  //     message.error('Failed to fetch staffs');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   useEffect(() => {
-    // Simulate API call with test data
-    setLoading(true);
-    setTimeout(() => {
-      setStaffs(testStaffData);
-      setLoading(false);
-    }, 500);
+    fetchStaffs();
   }, []);
-  
+
+  const fetchStaffs = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get('http://localhost:8000/Staffs.php');
+      if (response.data && response.data.status === 'success') {
+        setStaffs(response.data.data || []);
+      } else {
+        message.error(response.data?.message || 'Failed to fetch staffs');
+      }
+    } catch (error) {
+      console.error('Fetch staffs error:', error);
+      message.error('Failed to fetch staffs. Please check console for details.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAddStaff = async (values) => {
     try {
-      await axios.post('/api/staffs', values);
-      message.success('Staff added successfully');
-      setIsModalVisible(false);
-      form.resetFields();
-      fetchStaffs();
+      // Map form field names to database column names
+      const staffData = {
+        username: values.name,  // Your form uses 'name' but DB uses 'username'
+        email: values.email,
+        pin: values.pin,
+        role: values.role
+      };
+
+      const response = await axios.post('http://localhost:8000/Staffs.php', staffData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.data.status === 'success') {
+        message.success('Staff added successfully');
+        setIsModalVisible(false);
+        form.resetFields();
+        fetchStaffs();
+      } else {
+        message.error(response.data.message || 'Failed to add staff');
+        if (response.data.errors) {
+          response.data.errors.forEach(err => message.error(err));
+        }
+      }
     } catch (error) {
-      message.error('Failed to add staff');
+      console.error('Add staff error:', error);
+      message.error(error.response?.data?.message || 'Failed to add staff');
     }
   };
 
   const handleUpdateStaff = async (values) => {
     try {
-      await axios.put(`/api/staffs/${currentStaff.id}`, values);
-      message.success('Staff updated successfully');
-      setIsEditModalVisible(false);
-      editForm.resetFields();
-      fetchStaffs();
+      // Map form field names to database column names
+      const updateData = {
+        username: values.name,  // Your form uses 'name' but DB uses 'username'
+        email: values.email,
+        role: values.role
+      };
+
+      // Only include password if it was provided
+      if (values.pin) {
+        updateData.pin = values.pin;
+      }
+
+      const response = await axios.put(
+        `http://localhost:8000/Staffs.php?id=${currentStaff.id}`,
+        updateData,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.data.status === 'success') {
+        message.success('Staff updated successfully');
+        setIsEditModalVisible(false);
+        editForm.resetFields();
+        fetchStaffs();
+      } else {
+        message.error(response.data.message || 'Failed to update staff');
+        if (response.data.errors) {
+          response.data.errors.forEach(err => message.error(err));
+        }
+      }
     } catch (error) {
-      message.error('Failed to update staff');
+      console.error('Update staff error:', error);
+      message.error(error.response?.data?.message || 'Failed to update staff');
     }
   };
 
   const handleDeleteStaff = async (id) => {
     try {
-      await axios.delete(`/api/staffs/${id}`);
-      message.success('Staff deleted successfully');
-      // fetchStaffs();
+      const response = await axios.delete(`http://localhost:8000/Staffs.php?id=${id}`);
+      if (response.data.status === 'success') {
+        message.success('Staff deleted successfully');
+        fetchStaffs();
+      } else {
+        message.error(response.data.message || 'Failed to delete staff');
+      }
     } catch (error) {
-      message.error('Failed to delete staff', error);
+      console.error('Delete staff error:', error);
+      message.error(error.response?.data?.message || 'Failed to delete staff');
     }
   };
 
   const filteredStaffs = staffs.filter(staff => 
-    staff.name.toLowerCase().includes(searchText.toLowerCase()) ||
+    staff.username.toLowerCase().includes(searchText.toLowerCase()) ||
     staff.email.toLowerCase().includes(searchText.toLowerCase()) ||
     staff.role.toLowerCase().includes(searchText.toLowerCase())
   );
@@ -126,8 +136,8 @@ function ManagerStaffs() {
   const columns = [
     {
       title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'username',
+      key: 'username',
     },
     {
       title: 'Email',
@@ -149,13 +159,18 @@ function ManagerStaffs() {
             type="primary" 
             icon={<FaEdit />} 
             onClick={() => {
+              // Map database fields to form fields
               setCurrentStaff(record);
-              editForm.setFieldsValue(record);
+              editForm.setFieldsValue({
+                name: record.username,  // DB 'username' maps to form 'name'
+                email: record.email,
+                role: record.role
+              });
               setIsEditModalVisible(true);
             }}
           />
           <Button 
-            type="danger" 
+            danger
             icon={<FaTrash />} 
             onClick={() => handleDeleteStaff(record.id)}
           />
@@ -204,6 +219,7 @@ function ManagerStaffs() {
           form.resetFields();
         }}
         footer={null}
+        destroyOnClose
       >
         <Form
           form={form}
@@ -268,6 +284,7 @@ function ManagerStaffs() {
           editForm.resetFields();
         }}
         footer={null}
+        destroyOnClose
       >
         <Form
           form={editForm}
