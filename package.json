@@ -13,6 +13,7 @@
     "@heroicons/react": "^2.2.0",
     "@paystack/inline-js": "^2.22.2",
     "@tailwindcss/postcss": "^4.0.9",
+    "antd": "^5.24.6",
     "appwrite": "^17.0.0",
     "axios": "^1.8.1",
     "framer-motion": "^12.6.2",
