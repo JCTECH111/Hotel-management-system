@@ -12,7 +12,6 @@ import {
 import { AuthContext } from "../../../context/AuthContext";
 
 const HkDashboard = () => {
-    const { user } = useContext(AuthContext);
     return (
         <div className="flex flex-col min-h-screen md:flex-row">
       {/* Desktop Sidebar - Hidden on mobile */}

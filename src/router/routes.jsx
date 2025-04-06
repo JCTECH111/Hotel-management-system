@@ -38,6 +38,7 @@ import ManagerSettings from "../pages/Manager/pages/ManagerSetting";
 // Add unauthorized page
 import Unauthorized from "../pages/Unauthorized"; 
 import HkDashboard from "../pages/houseKeeper/pages/HkDashboard";
+import DashboardOverview from "../pages/houseKeeper/components/DashboardOverview";
 
 export default function AppRoutes() {
   return (
@@ -116,7 +117,7 @@ export default function AppRoutes() {
             </PrivateRoute>
           }
         >
-          {/* <Route path="staffs" element={<Staffs />} /> */}
+          <Route index element={<DashboardOverview />} />
         </Route>
 
         {/* Unauthorized Page */}

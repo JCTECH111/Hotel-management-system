@@ -3,25 +3,28 @@ import { AuthContext } from "./AuthContext"; // Import the Context
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const login = (token, userData) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
+    setToken(token);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
+    setToken(null);
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const tokens = localStorage.getItem("token");
     const userDataString = localStorage.getItem("user");
   
-    if (token && userDataString) {
+    if (tokens && userDataString) {
       try {
         const userData = JSON.parse(userDataString); // Attempt to parse JSON
         fetch("http://localhost:8000/validate_token.php", {
@@ -29,7 +32,7 @@ export function AuthProvider({ children }) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ token }),
+          body: JSON.stringify({ tokens }),
         })
           .then((res) => res.json())
           .then((data) => {
@@ -52,7 +55,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
