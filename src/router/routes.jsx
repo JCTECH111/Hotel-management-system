@@ -37,6 +37,7 @@ import ManagerStaffs from "../pages/Manager/pages/ManagerStaffs";
 import ManagerSettings from "../pages/Manager/pages/ManagerSetting";
 // Add unauthorized page
 import Unauthorized from "../pages/Unauthorized"; 
+import HkDashboard from "../pages/houseKeeper/pages/HkDashboard";
 
 export default function AppRoutes() {
   return (
@@ -111,7 +112,7 @@ export default function AppRoutes() {
           path="/housekeeper-dashboard"
           element={
             <PrivateRoute allowedRoles={["housekeeper"]}>
-              {/* <HousekeeperDashboard /> */}
+              <HkDashboard />
             </PrivateRoute>
           }
         >
