@@ -34,7 +34,7 @@ function DashboardOverview() {
         });
         
         // Fetch urgent requests with authorization
-        const requestsRes = await axios.get('http://localhost:8000/requests.php', {
+        const requestsRes = await axios.get('http://localhost:8000/request.php', {
           params: { status: 'urgent' },
           headers: {
             'Authorization': `Bearer ${token}`,
