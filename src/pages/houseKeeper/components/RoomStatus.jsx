@@ -7,7 +7,7 @@ function RoomStatus() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
-  const { token } = useContext(AuthContext);
+  const { token, user } = useContext(AuthContext);
 
   const fetchRooms = async () => {
     try {
@@ -33,12 +33,12 @@ function RoomStatus() {
   const handleStatusChange = async (roomId, status) => {
     try {
       setUpdating(true);
-      await axios.post(
+      const updatingApi = await axios.post(
         'http://localhost:8000/update_room.php',
         {
           roomId,
           status,
-          housekeeperName: localStorage.getItem('housekeeperName')
+          housekeeperName: user.username
         },
         {
           headers: {
@@ -47,6 +47,7 @@ function RoomStatus() {
           }
         }
       );
+    //   console.log(roomId, status, user.username)
       
       // Optimistic UI update
       setRooms(prevRooms => 

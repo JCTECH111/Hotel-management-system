@@ -20,7 +20,7 @@ $email = $data['email'];
 $pin = $data['pin'];
 
 // Check if user exists
-$stmt = $conn->prepare("SELECT id, email, role, pin FROM users WHERE email = ? OR username = ?");
+$stmt = $conn->prepare("SELECT id, email, role, pin, username FROM users WHERE email = ? OR username = ?");
 $stmt->bind_param("ss", $email,$email);
 $stmt->execute();
 
@@ -37,7 +37,8 @@ if (isset($user)) {
             "user" => [
                 "id" => $user['id'],
                 "email" => $user['email'],
-                "role" => $user['role']
+                "role" => $user['role'],
+                "username" => $user['username']
             ]
         ]);
     } else {
