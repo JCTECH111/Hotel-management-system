@@ -21,7 +21,7 @@ const HkDashboard = () => {
           <ul className="space-y-4">
             <li>
               <Link
-                to="/manager-dashboard/rooms"
+                to="/housekeeper-dashboard/room-status"
                 className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
               >
                 <InboxStackIcon className="w-6 h-6" /> Rooms
@@ -29,7 +29,7 @@ const HkDashboard = () => {
             </li>
             <li>
               <Link
-                to="/manager-dashboard/bookings"
+                to="/housekeeper-dashboard/bookings"
                 className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
               >
                 <ClipboardDocumentCheckIcon className="w-6 h-6" /> Bookings
@@ -37,7 +37,7 @@ const HkDashboard = () => {
             </li>
             <li>
               <Link
-                to="/manager-dashboard/staffs"
+                to="/housekeeper-dashboard/staffs"
                 className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
               >
                 <UserGroupIcon className="w-6 h-6" /> Staffs
@@ -45,7 +45,7 @@ const HkDashboard = () => {
             </li>
             <li>
               <Link
-                to="/manager-dashboard/settings"
+                to="/housekeeper-dashboard/settings"
                 className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
               >
                 <CogIcon className="w-6 h-6" /> Settings
@@ -75,7 +75,7 @@ const HkDashboard = () => {
         <div className="md:hidden fixed mx-3 bottom-2 rounded-3xl left-0 right-0 bg-[#ECF3F3] border border-gray-300 shadow-xl flex justify-around items-center py-2 px-2 z-50">
           {/* Logo - Acts as home button */}
           <Link
-            to="/manager-dashboard/rooms"
+            to="/housekeeper-dashboard/room-status"
             className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
           >
             <InboxStackIcon className="w-6 h-6" />
@@ -83,7 +83,7 @@ const HkDashboard = () => {
           </Link>
 
           <Link
-            to="/manager-dashboard/bookings"
+            to="/housekeeper-dashboard/bookings"
             className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
           >
             <ClipboardDocumentCheckIcon className="w-6 h-6" />
@@ -91,7 +91,7 @@ const HkDashboard = () => {
           </Link>
 
           <Link
-            to="/manager-dashboard/staffs"
+            to="/housekeeper-dashboard/staffs"
             className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
           >
             <UserGroupIcon className="w-6 h-6" />
@@ -99,7 +99,7 @@ const HkDashboard = () => {
           </Link>
 
           <Link
-            to="/manager-dashboard/settings"
+            to="/housekeeper-dashboard/settings"
             className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
           >
             <CogIcon className="w-6 h-6" />

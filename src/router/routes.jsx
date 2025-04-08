@@ -39,6 +39,7 @@ import ManagerSettings from "../pages/Manager/pages/ManagerSetting";
 import Unauthorized from "../pages/Unauthorized"; 
 import HkDashboard from "../pages/houseKeeper/pages/HkDashboard";
 import DashboardOverview from "../pages/houseKeeper/components/DashboardOverview";
+import RoomStatus from "../pages/houseKeeper/components/RoomStatus";
 
 export default function AppRoutes() {
   return (
@@ -117,7 +118,9 @@ export default function AppRoutes() {
             </PrivateRoute>
           }
         >
+          {/* <Route index element={<RoomStatus />} /> */}
           <Route index element={<DashboardOverview />} />
+          <Route path="room-status" element={<RoomStatus />} />
         </Route>
 
         {/* Unauthorized Page */}
