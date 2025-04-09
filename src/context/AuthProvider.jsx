@@ -1,58 +1,61 @@
-import { useState, useEffect } from "react";
-import { AuthContext } from "./AuthContext"; // Import the Context
+import { useState, useEffect, useCallback } from "react";
+import { AuthContext } from "./AuthContext";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const login = (token, userData) => {
-    localStorage.setItem("token", token);
+  // Memoized login/logout to prevent unnecessary re-renders
+  const login = useCallback((newToken, userData) => {
+    localStorage.setItem("token", newToken);
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
-    setToken(token);
-  };
+    setToken(newToken);
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
     setToken(null);
-  };
+  }, []);
 
+  // Validate token on initial load
   useEffect(() => {
-    const tokens = localStorage.getItem("token");
-    const userDataString = localStorage.getItem("user");
-  
-    if (tokens && userDataString) {
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+
+    if (!storedToken || !storedUser) {
+      setLoading(false);
+      return;
+    }
+
+    const validateToken = async () => {
       try {
-        const userData = JSON.parse(userDataString); // Attempt to parse JSON
-        fetch("http://localhost:8000/validate_token.php", {
+        const response = await fetch("http://localhost:8000/validate_token.php", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ tokens }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.success) {
-              setUser(userData);
-            } else {
-              logout();
-            }
-          })
-          .catch(() => logout())
-          .finally(() => setLoading(false));
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: storedToken }),
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          setUser(JSON.parse(storedUser));
+          setToken(storedToken);
+        } else {
+          logout(); // Clear invalid token
+        }
       } catch (error) {
-        console.error("Failed to parse user data from localStorage:", error);
-        logout(); // Clear invalid data
+        console.error("Token validation failed:", error);
+        logout(); // Clear on error
+      } finally {
         setLoading(false);
       }
-    } else {
-      setLoading(false);
-    }
-  }, []);
+    };
+
+    validateToken();
+  }, [logout]);
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, loading }}>
