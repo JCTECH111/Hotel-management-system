@@ -47,7 +47,7 @@ function RoomStatus() {
           }
         }
       );
-    //   console.log(roomId, status, user.username)
+      console.log(updatingApi)
       
       // Optimistic UI update
       setRooms(prevRooms => 

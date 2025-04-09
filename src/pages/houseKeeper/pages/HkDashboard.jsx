@@ -29,22 +29,6 @@ const HkDashboard = () => {
             </li>
             <li>
               <Link
-                to="/housekeeper-dashboard/bookings"
-                className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
-              >
-                <ClipboardDocumentCheckIcon className="w-6 h-6" /> Bookings
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/housekeeper-dashboard/staffs"
-                className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
-              >
-                <UserGroupIcon className="w-6 h-6" /> Staffs
-              </Link>
-            </li>
-            <li>
-              <Link
                 to="/housekeeper-dashboard/settings"
                 className="flex items-center gap-3 p-2 font-bold text-gray-800 rounded cursor-pointer hover:bg-green-600 hover:text-white"
               >
@@ -82,21 +66,7 @@ const HkDashboard = () => {
             <span className="mt-1 text-xs font-medium">Rooms</span>
           </Link>
 
-          <Link
-            to="/housekeeper-dashboard/bookings"
-            className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
-          >
-            <ClipboardDocumentCheckIcon className="w-6 h-6" />
-            <span className="mt-1 text-xs font-medium">Bookings</span>
-          </Link>
-
-          <Link
-            to="/housekeeper-dashboard/staffs"
-            className="flex flex-col items-center p-2 transition-colors hover:bg-green-700 hover:text-white rounded-xl"
-          >
-            <UserGroupIcon className="w-6 h-6" />
-            <span className="mt-1 text-xs font-medium">Staffs</span>
-          </Link>
+          
 
           <Link
             to="/housekeeper-dashboard/settings"
