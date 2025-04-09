@@ -43,7 +43,7 @@ A **full-stack web application** for managing hotel operations, bookings, staff,
 ![Invoice](./readme_img/receipt.png)
 - Multiple payment methods:
   - 💵 Cash
-  - 💳 Cards (Stripe integration)
+  - 💳 Cards (Paystack integration)
   - 📲 Mobile payments
 
 ---
