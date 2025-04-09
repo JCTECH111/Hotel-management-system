@@ -1,6 +1,6 @@
 # 🏨 Hotel Management System
 
-![Hotel Management Dashboard](https://via.placeholder.com/1200x600?text=Hotel+Dashboard+Preview)
+![Hotel Management Dashboard](./readme_img/DASHBOARD.png)
 
 A **full-stack web application** for managing hotel operations, bookings, staff, and guest services with role-based access control.
 
