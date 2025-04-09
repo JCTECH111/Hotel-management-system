@@ -1,63 +1,68 @@
 # 🏨 Hotel Management System
 
-## **Overview**
-The **Hotel Management System** is a full-stack web application designed to **streamline hotel operations**, including **guest bookings, employee management, housekeeping tracking, and payments**. The system provides a seamless experience for **guests, staff, and administrators**, ensuring efficient management of hotel resources.
+![Hotel Management Dashboard](https://via.placeholder.com/1200x600?text=Hotel+Dashboard+Preview)
+
+A **full-stack web application** for managing hotel operations, bookings, staff, and guest services with role-based access control.
 
 ---
 
-## **🚀 Features**
-### ✅ **Authentication & Role Management**
-- Secure login for **guests, employees, housekeepers, and managers**
-- Role-based access control to prevent unauthorized actions
+## 🌟 Key Features
+### 🔐 Authentication & Roles
+![Login Page](./readme_img/login.png)
+- Secure JWT authentication for:
+  - 🧑‍💼 **Admin** (Full access)
+  - 🧹 **Housekeeping** (Room status updates)
+  - 🏨 **Reception** (Bookings/check-ins)
+  - 👨‍👩‍👦 **Guests** (Booking portal)
 
-### ✅ **Room Management**
-- Add, update, and delete room details
-- Upload multiple room images
-- Assign room facilities like **WiFi, TV, Air Conditioning**
+### 🛏️ Room Management
+![Room Management](./readme_img/staffs-room.png)
+![Room INFO](./readme_img/about-room.png)
+- Add/edit rooms with:t
+  - 📸 Multiple images
+  - 🛁 Amenities (WiFi, AC, Mini-bar)
+  - 📊 Real-time availability calendar
 
-### ✅ **Booking System**
-- Guests can **reserve rooms online**
-- Check-in & Check-out management
-- Track **room availability**
+### 📅 Booking System
+![Booking Interface](./readme_img/staff-booking-room.png)
+- Online reservations with:
+  - 🗓️ Date selection
+  - 👥 Guest count
+  - 💳 Secure payment gateway
 
-### ✅ **Housekeeping & Maintenance**
-- Assign cleaning tasks to housekeepers
-- Mark rooms as **cleaned, occupied, or under maintenance**
+### 🧹 Housekeeping
+![Housekeeping Dashboard](./readme_img/hk-room_status.png)
+- Room status tracking:
+  - 🟢 Clean
+  - 🟠 Occupied
+  - 🔴 Maintenance
 
-### ✅ **Customer Support (Live Chat)**
-- Guests can **chat with hotel staff** for issues or requests
-- Secure **messaging system** between staff and customers
-
-### ✅ **Payments & Invoices**
-- Online payment processing (**Cash, Credit Card, Bank Transfer**)
-- Auto-generated invoices for bookings
-
-### ✅ **Feedback & Reviews**
-- Guests can leave **ratings & reviews** after their stay
-- Managers can **view feedback** for hotel improvement
-
-### ✅ **Admin Dashboard**
-- View **real-time analytics** of hotel operations
-- Monitor **room occupancy, staff activity, and revenue**
-
----
-
-## **💻 Tech Stack**
-### **Frontend:**
-- [React](https://react.dev/) (Vite)
-- [TailwindCSS](https://tailwindcss.com/)
-- [React Router](https://reactrouter.com/)
-- [Toastify](https://fkhadra.github.io/react-toastify/)
-
-### **Backend:**
-- [PHP](https://www.php.net/)
-- [MySQL](https://www.mysql.com/)
-- [JWT Authentication](https://jwt.io/)
+### 💰 Payments & Invoices
+![Invoice](./readme_img/receipt.png)
+- Multiple payment methods:
+  - 💵 Cash
+  - 💳 Cards (Stripe integration)
+  - 📲 Mobile payments
 
 ---
 
-## **📦 Installation & Setup**
-### **1️⃣ Clone the Repository**
-```sh
-git clone https://github.com/JCTECH111/Hotel-management-system.git
+## 🛠 Tech Stack
+| Layer        | Technologies                                                                 |
+|--------------|-----------------------------------------------------------------------------|
+| **Frontend** | React 18 • TailwindCSS • Redux • React Router • Vite                        |
+| **Backend**  | PHP 8.2 • MySQL • JWT Authentication                                       |
+| **DevOps**   | Docker • GitHub Actions                                                    |
+
+---
+
+## 🚀 Installation
+```bash
+# Clone repository
+git clone https://github.com/your-repo/hotel-management-system.git
 cd hotel-management-system
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
