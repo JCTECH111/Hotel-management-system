@@ -18,6 +18,8 @@ A **full-stack web application** for managing hotel operations, bookings, staff,
 ### 🛏️ Room Management
 ![Room Management](./readme_img/staffs-room.png)
 ![Room INFO](./readme_img/about-room.png)
+![ADD ROOM](./readme_img/add-new-room.png)
+![EDIT ROOM](./readme_img/EDIT-ROOM.png)
 - Add/edit rooms with:t
   - 📸 Multiple images
   - 🛁 Amenities (WiFi, AC, Mini-bar)
